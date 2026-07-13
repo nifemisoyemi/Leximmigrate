@@ -1,7 +1,25 @@
-venv/
-__pycache__/
-*.pyc
-db.sqlite3
+# --- Secrets & environment ---
 .env
-node_modules/
-dist/
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# --- Django ---
+*.log
+*.sqlite3
+/media/
+/staticfiles/
+local_settings.py
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

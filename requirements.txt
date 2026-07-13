@@ -1,0 +1,17 @@
+# LexImmigrate — Python dependencies
+# Start minimal. We add packages as we implement each feature, so nothing
+# unused is installed. Pinned to compatible ranges for reproducibility.
+
+Django>=5.2,<5.3          # LTS, security-patched through April 2028
+psycopg[binary]>=3.2      # PostgreSQL driver
+django-environ>=0.11      # read settings/secrets from environment (.env)
+
+# --- Added later, per feature (leave commented until we get there) ---
+# django-two-factor-auth   # TOTP 2FA (Milestone 1)
+# stripe                   # payments (Milestone 1)
+# django-storages[boto3]   # DigitalOcean Spaces (Milestone 2)
+# django-anymail[postmark] # transactional email (Milestone 2)
+# django-rq  redis         # background jobs / virus scanning (Milestone 2)
+# django-auditlog          # audit logging (Milestone 3)
+# sentry-sdk               # error monitoring (Milestone 3)
+# gunicorn                 # production WSGI server (Milestone 3)
