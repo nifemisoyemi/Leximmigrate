@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "accounts",
     "catalog",
     "cases",
+    "quiz",
 ]
 
 MIDDLEWARE = [
@@ -104,3 +105,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+# --- Email config --------------------------------------------------------
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "LexImmigrate <noreply@leximmigrate.com>"
+FIRM_NOTIFICATION_EMAIL = "leads@leximmigrate.test"

@@ -176,6 +176,9 @@ class QuestionOption(models.Model):
     order = models.PositiveIntegerField(default=0)
     is_disqualifying = models.BooleanField(default=False)
     skip_to = models.ForeignKey("Question", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    is_flag = models.BooleanField(default=False)
+    flag_strength = models.PositiveSmallIntegerField(default=1)
+    recommends_tier = models.ForeignKey(Tier, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
 
     class Meta:
         ordering = ["question", "order"]

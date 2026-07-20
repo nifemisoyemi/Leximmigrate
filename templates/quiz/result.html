@@ -1,0 +1,25 @@
+{% extends "quiz/base_quiz.html" %}
+
+{% block title %}Your results — LexImmigrate{% endblock %}
+
+{% block quiz %}
+  <div class="result-card">
+  {% if disqualified %}
+    <div class="quiz-step">Eligibility check</div>
+    <h1>You're not quite eligible yet</h1>
+    <p>{{ stop_reason }}</p>
+    <p>This is exactly the kind of thing our attorneys can help you plan for. Book a consultation and we'll map out your path to citizenship.</p>
+    <a href="#" class="btn btn-primary btn-lg" style="margin-top:14px">Book a consultation</a>
+  {% else %}
+    <div class="quiz-step">Good news</div>
+    <h1>You're likely eligible</h1>
+    <p>Based on your answers, here's the package we recommend:</p>
+    {% if lead.recommended_package %}
+      <div class="rec-tier">{{ lead.recommended_package.tier.name }}</div>
+      {% if lead.recommended_package.tier.tagline %}<p>{{ lead.recommended_package.tier.tagline }}</p>{% endif %}
+    {% endif %}
+    <p style="margin-top:10px;font-size:.9rem">This is an estimate, not legal advice — a licensed attorney confirms your eligibility before you file.</p>
+    <a href="#" class="btn btn-primary btn-lg" style="margin-top:14px">Continue to your package</a>
+  {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "quiz/base_quiz.html" %}
+
+{% block title %}Almost done — LexImmigrate{% endblock %}
+
+{% block quiz %}
+  <div class="quiz-step">Last step</div>
+  <h2 class="quiz-q">Where should we send your results?</h2>
+  <p class="quiz-help">Enter your details to see where you stand. No account or payment needed.</p>
+
+  <form method="post" action="{% url 'quiz:contact' %}">
+    {% csrf_token %}
+    {% if form.errors %}<div class="quiz-err">Please check the highlighted fields and try again.</div>{% endif %}
+    <div class="field"><label for="id_first_name">First name</label>{{ form.first_name }}</div>
+    <div class="field"><label for="id_last_name">Last name</label>{{ form.last_name }}</div>
+    <div class="field"><label for="id_email">Email</label>{{ form.email }}</div>
+    <div class="field"><label for="id_phone">Phone (optional)</label>{{ form.phone }}</div>
+    <div class="quiz-actions">
+      <button type="submit" class="btn btn-primary btn-lg">See my results</button>
+    </div>
+  </form>
+{% endblock %}

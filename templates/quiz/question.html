@@ -1,0 +1,30 @@
+{% extends "quiz/base_quiz.html" %}
+
+{% block title %}Eligibility check — LexImmigrate{% endblock %}
+
+{% block quiz %}
+  <div class="quiz-progress"><span style="width: {{ progress.pct }}%"></span></div>
+  <div class="quiz-step">Question {{ progress.current }} of {{ progress.total }}</div>
+  <h2 class="quiz-q">{{ question.text }}</h2>
+  {% if question.help_text %}<p class="quiz-help">{{ question.help_text }}</p>{% endif %}
+  {% if error %}<div class="quiz-err">{{ error }}</div>{% endif %}
+
+  <form method="post" action="{% url 'quiz:question' %}">
+    {% csrf_token %}
+    {% if question.kind == "text" %}
+      <div class="field"><input type="text" name="answer" autofocus></div>
+    {% else %}
+      <div class="quiz-options">
+        {% for opt in question.options.all %}
+          <label class="opt">
+            <input type="radio" name="option" value="{{ opt.id }}" required>
+            <span>{{ opt.label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="quiz-actions">
+      <button type="submit" class="btn btn-primary btn-lg">Continue</button>
+    </div>
+  </form>
+{% endblock %}

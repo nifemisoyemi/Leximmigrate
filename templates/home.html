@@ -11,7 +11,7 @@
       <h1>You decide how much <em>lawyering</em> you need.</h1>
       <p class="lead">Becoming a U.S. citizen is a big step. We guide you through it clearly — and you choose how much attorney help you want, from doing it yourself to full representation.</p>
       <div class="hero-cta">
-        <a href="#start" class="btn btn-primary btn-lg">See if you qualify — it's free</a>
+        <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-lg">See if you qualify — it's free</a>
         <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
       </div>
       <div class="microtrust"><span class="dot"></span> A few questions, about 2 minutes. No account or payment needed to start.</div>
@@ -67,7 +67,7 @@
           <li>60 minutes with a licensed immigration attorney, used whenever you need it</li>
           <li>Answers to your specific questions</li>
         </ul>
-        <a href="#start" class="btn btn-ghost">See if you qualify</a>
+        <a href="{% url 'quiz:start' %}" class="btn btn-ghost">See if you qualify</a>
       </div>
 
       <div class="tier featured">
@@ -82,7 +82,7 @@
           <li>120 minutes of attorney time total</li>
           <li>USCIS interview preparation</li>
         </ul>
-        <a href="#start" class="btn btn-primary">See if you qualify</a>
+        <a href="{% url 'quiz:start' %}" class="btn btn-primary">See if you qualify</a>
       </div>
 
       <div class="tier">
@@ -96,7 +96,7 @@
           <li>We prepare, file &amp; track your application</li>
           <li>An attorney with you at your USCIS interview</li>
         </ul>
-        <a href="#start" class="btn btn-ghost">See if you qualify</a>
+        <a href="{% url 'quiz:start' %}" class="btn btn-ghost">See if you qualify</a>
       </div>
     </div>
   </div>
@@ -169,7 +169,7 @@
     <span class="eyebrow">Ready when you are</span>
     <h2>Find out if you qualify.</h2>
     <p>Answer a few questions and we'll tell you where you stand and which package fits. It's free, and takes about two minutes.</p>
-    <a href="#" class="btn btn-primary btn-lg">Start the free eligibility check</a>
+    <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-lg">Start the free eligibility check</a>
   </div>
 </section>
 {% endblock %}

@@ -23,7 +23,7 @@
     <div class="nav-right">
       <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
       <a href="#" style="font-weight:600">Log in</a>
-      <a href="{% url 'home' %}#start" class="btn btn-primary">See if you qualify</a>
+      <a href="{% url 'quiz:start' %}" class="btn btn-primary">See if you qualify</a>
     </div>
     <button class="menu-btn" aria-label="Open menu">☰</button>
   </div>
@@ -54,7 +54,7 @@
         <h5>Account</h5>
         <ul>
           <li><a href="#">Log in</a></li>
-          <li><a href="{% url 'home' %}#start">See if you qualify</a></li>
+          <li><a href="{% url 'quiz:start' %}">See if you qualify</a></li>
         </ul>
       </div>
       <div>
