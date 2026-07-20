@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}LexImmigrate — U.S. immigration, made clear{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="{% url 'home' %}">Lex<b>Immigrate</b></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="{% url 'home' %}#how">How it works</a>
+      <a href="{% url 'home' %}#packages">Packages</a>
+      <a href="#faq">FAQs</a>
+    </nav>
+    <div class="nav-right">
+      <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
+      <a href="#" style="font-weight:600">Log in</a>
+      <a href="{% url 'home' %}#start" class="btn btn-primary">See if you qualify</a>
+    </div>
+    <button class="menu-btn" aria-label="Open menu">☰</button>
+  </div>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px">Lex<b>Immigrate</b></div>
+        <p style="max-width:32ch">Guided U.S. immigration, with as much attorney support as you want.</p>
+        <p style="margin-top:12px;font-size:.86rem;color:#8ea3b2">YSL Immigration Lawyers · Austin &amp; Laredo, TX · (512) 476-9950</p>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <ul>
+          <li><a href="{% url 'home' %}#how">How it works</a></li>
+          <li><a href="{% url 'home' %}#packages">Packages</a></li>
+          <li><a href="#faq">FAQs</a></li>
+          <li><a href="#">Español</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Account</h5>
+        <ul>
+          <li><a href="#">Log in</a></li>
+          <li><a href="{% url 'home' %}#start">See if you qualify</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Attorney–Client Notice</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-note">
+      <div class="disc">
+        Using this website does not by itself create an attorney–client relationship. LexImmigrate is a service of YSL Immigration Lawyers.
+      </div>
+      © 2026 YSL Immigration Lawyers. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

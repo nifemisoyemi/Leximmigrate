@@ -94,6 +94,7 @@ USE_TZ = True
 # --- Static & media ------------------------------------------------------
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"      # local only; DO Spaces takes over in Milestone 2
 
