@@ -18,7 +18,7 @@
     <nav class="nav-links" aria-label="Primary">
       <a href="{% url 'home' %}#how">How it works</a>
       <a href="{% url 'home' %}#packages">Packages</a>
-      <a href="#faq">FAQs</a>
+      <a href="{% url 'faq' %}">FAQs</a>
     </nav>
     <div class="nav-right">
       <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
@@ -46,7 +46,7 @@
         <ul>
           <li><a href="{% url 'home' %}#how">How it works</a></li>
           <li><a href="{% url 'home' %}#packages">Packages</a></li>
-          <li><a href="#faq">FAQs</a></li>
+          <li><a href="{% url 'faq' %}">FAQs</a></li>
           <li><a href="#">Español</a></li>
         </ul>
       </div>
@@ -60,9 +60,9 @@
       <div>
         <h5>Legal</h5>
         <ul>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Attorney–Client Notice</a></li>
+          <li><a href="{% url 'legal_privacy' %}">Privacy Policy</a></li>
+          <li><a href="{% url 'legal_terms' %}">Terms of Service</a></li>
+          <li><a href="{% url 'legal_notice' %}">Attorney–Client Notice</a></li>
         </ul>
       </div>
     </div>

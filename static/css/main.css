@@ -154,3 +154,35 @@ footer a:hover{color:#fff}
   .foot-grid{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+
+/* --- Legal pages --------------------------------------------------------- */
+.legal{padding:64px 0 88px}
+.legal-wrap{max-width:72ch}
+.legal h1{font-size:clamp(2.1rem,4vw,3rem);margin:.4rem 0 .3rem}
+.legal-updated{color:var(--muted);font-size:.9rem;margin-bottom:1.6rem}
+.legal-intro{font-size:1.12rem;color:var(--muted);border-left:3px solid var(--honey);
+  padding:2px 0 2px 18px;margin-bottom:2.2rem}
+.legal h2{font-size:1.35rem;margin:2.4rem 0 .7rem}
+.legal p{margin-bottom:1rem;color:#334553}
+.legal ul{margin:0 0 1rem 1.2rem;display:flex;flex-direction:column;gap:.5rem;color:#334553}
+.legal a{color:var(--brand);text-decoration:underline;text-underline-offset:3px}
+.draft-banner{background:var(--honey-soft);border:1.5px dashed var(--honey-deep);color:#6b4a10;
+  border-radius:10px;padding:12px 16px;font-weight:600;font-size:.92rem;margin-bottom:28px}
+
+/* --- FAQ ----------------------------------------------------------------- */
+.faq h2{margin-top:2.8rem}
+.faq-item{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+  margin-bottom:12px;overflow:hidden}
+.faq-item summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;
+  align-items:center;gap:16px;padding:18px 20px;font-weight:600;font-size:1.05rem}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-family:"Fraunces",serif;font-size:1.4rem;
+  color:var(--honey-deep);flex-shrink:0;transition:transform .2s ease}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item[open] summary{border-bottom:1px solid var(--line)}
+.faq-item p{padding:16px 20px;margin:0;color:#334553}
+.faq-item summary:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}
+.faq-cta{margin-top:3rem;text-align:center;background:var(--honey-soft);
+  border-radius:var(--radius);padding:36px 24px}
+.faq-cta p{font-family:"Fraunces",serif;font-size:1.3rem;margin-bottom:1rem;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.faq-item summary::after{transition:none}}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service — LexImmigrate{% endblock %}
+
+{% block content %}
+<section class="legal">
+  <div class="wrap legal-wrap">
+
+    {# REMOVE this banner once Yohana approves the final text #}
+    <div class="draft-banner">DRAFT — pending attorney review. Not yet published terms.</div>
+
+    <span class="eyebrow">Legal</span>
+    <h1>Terms of Service</h1>
+    <p class="legal-updated">Last updated: [DATE — set on approval]</p>
+
+    <p class="legal-intro">These terms are the agreement between you and YSL Immigration Lawyers for your use of the LexImmigrate platform. By using the site, completing the eligibility check, creating an account, or purchasing a package, you agree to them. Please read them — they're shorter than most.</p>
+
+    <h2>1. Who we are</h2>
+    <p>LexImmigrate is operated by <strong>YSL Immigration Lawyers</strong> ("the Firm," "we," "us"), a Texas law firm founded by attorney Yohana Saucedo, with offices in Austin and Laredo, Texas. LexImmigrate is a way of working with a real law firm — it is not a self-help forms website and not a substitute for one.</p>
+
+    <h2>2. What the eligibility check is — and isn't</h2>
+    <p>The free eligibility check gives you an <strong>estimate</strong> of whether you likely qualify for the immigration benefit in question, based on your answers and current USCIS requirements. It is general information, not legal advice, and it does not create an attorney–client relationship. A licensed attorney confirms your eligibility before anything is filed. When that relationship begins, and what it covers, is explained in our <a href="{% url 'legal_notice' %}">Attorney–Client Notice</a>.</p>
+
+    <h2>3. Eligibility to use the platform</h2>
+    <p>You must be at least 18 years old and able to enter a binding contract. You agree to provide accurate, complete, and current information — in the questionnaire, in your account, and in your case. Immigration filings depend on the truth of what you tell us; inaccurate information can harm your application and is grounds for the Firm to withdraw from representation.</p>
+
+    <h2>4. Your account</h2>
+    <p>You are responsible for keeping your login credentials confidential and for activity under your account. Tell us immediately at [SUPPORT EMAIL] if you believe your account has been accessed without authorization. We strongly recommend enabling two-factor authentication.</p>
+
+    <h2>5. Packages, pricing, and payment</h2>
+    <ul>
+      <li>Each package (DIY, Enhanced, Full Service) is a <strong>one-time fee</strong> for the services listed on the package page at the time of purchase. The scope of legal services in each package is defined in the engagement agreement you receive when you purchase.</li>
+      <li><strong>Government filing fees are separate.</strong> USCIS charges its own fees, which you pay directly to the government and which we do not control. We tell you what they are, but USCIS may change them.</li>
+      <li>Payments are processed by Stripe. Prices may change, but a change never affects a package you have already purchased.</li>
+      <li>Attorney time included in a package ([e.g., 60 or 120 minutes]) is usable as described in your package and engagement agreement.</li>
+    </ul>
+
+    <h2>6. Refunds</h2>
+    <p>[REFUND POLICY — FIRM DECISION PENDING. Placeholder structure: e.g., "If you have not yet used attorney time or submitted documents for review, you may request a full refund within X days of purchase. After services have begun, refunds are prorated / handled as described in your engagement agreement." Must align with Texas bar rules on fee refunds.]</p>
+
+    <h2>7. No guarantee of outcome</h2>
+    <p>Only the U.S. government decides immigration applications. We cannot and do not guarantee that any application will be approved, that USCIS will act within any particular time, or that the law will not change while your application is pending. What we promise is the diligent, competent work described in your package.</p>
+
+    <h2>8. Your responsibilities</h2>
+    <ul>
+      <li>Provide truthful, complete information and genuine documents.</li>
+      <li>Respond to requests and deadlines in your case — immigration deadlines are often unforgiving.</li>
+      <li>Keep your contact information current so we can reach you.</li>
+      <li>Review anything we prepare for you before it is filed.</li>
+    </ul>
+
+    <h2>9. Acceptable use</h2>
+    <p>You agree not to misuse the platform — including attempting to access other users' information, probing or disrupting the platform's security, uploading malicious files, scraping the site, using it to send spam, or using it for any unlawful purpose. We may suspend or terminate access for violations; if you have an active matter with the Firm, any withdrawal from representation will follow the applicable professional rules.</p>
+
+    <h2>10. Intellectual property</h2>
+    <p>The platform — its design, text, guides, and software — belongs to the Firm or its licensors. You may use it for your own case, not copy or resell it. Your documents remain yours; you give us permission to store and use them as needed to provide your services.</p>
+
+    <h2>11. Third-party services</h2>
+    <p>Parts of the platform rely on third-party services (for example, Stripe for payments and Cal.com for scheduling). Their terms govern your direct use of those services. Links to official government resources, including USCIS, are provided for convenience; the government's sites and rules control over anything we summarize.</p>
+
+    <h2>12. Disclaimers and limits on liability</h2>
+    <p>[ATTORNEY REVIEW REQUIRED — proposed draft:] The platform is provided "as is." To the fullest extent permitted by law, the Firm disclaims warranties about the platform's uninterrupted or error-free operation, and the Firm's total liability arising out of your use of the <em>platform itself</em> is limited to the amount you paid for your package. <strong>Nothing in these terms limits the Firm's professional responsibility for legal services performed under an engagement agreement, or any liability that cannot be limited by law.</strong></p>
+
+    <h2>13. Governing law and disputes</h2>
+    <p>These terms are governed by Texas law. Any dispute arising out of them will be resolved in the state or federal courts located in [Travis County / COUNTY — FIRM DECISION], Texas. [OPTIONAL — FIRM DECISION: arbitration clause instead? Flag: consumer arbitration clauses have trade-offs; attorney to decide.]</p>
+
+    <h2>14. Changes to these terms</h2>
+    <p>We may update these terms. If we make significant changes, we will notify account holders by email before the changes take effect. Your continued use of the platform after that means the updated terms apply. Changes do not retroactively alter the engagement agreement for a package you already purchased.</p>
+
+    <h2>15. Contact</h2>
+    <p>YSL Immigration Lawyers · [FIRM MAILING ADDRESS] · (512) 476-9950 · [SUPPORT EMAIL]</p>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}FAQs — LexImmigrate{% endblock %}
+
+{% block content %}
+<section class="legal faq">
+  <div class="wrap legal-wrap">
+
+    {# REMOVE this banner once Yohana approves the final text #}
+    <div class="draft-banner">DRAFT — pending attorney review.</div>
+
+    <span class="eyebrow">FAQs</span>
+    <h1>Questions people actually ask.</h1>
+    <p class="legal-intro">Plain answers, in the same spirit as the rest of the site. If yours isn't here, call us — (512) 476-9950 — or start the free eligibility check and ask along the way.</p>
+
+    <h2>Getting started</h2>
+
+    <details class="faq-item">
+      <summary>Is this a real law firm?</summary>
+      <p>Yes. LexImmigrate is a service of YSL Immigration Lawyers, founded by attorney Yohana Saucedo, with offices in Austin and Laredo, Texas. It is not a forms website — the guidance, reviews, and representation in our packages come from licensed immigration attorneys.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Is the eligibility check really free?</summary>
+      <p>Yes — free, about two minutes, and no account or payment needed. You answer plain-language questions about the legal requirements for naturalization, and we tell you where you likely stand and which package fits your situation.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What happens after I finish the eligibility check?</summary>
+      <p>You see your result right away: whether you're likely eligible, and the level of support we recommend. If you want to move forward, you create an account, choose your package, and begin the guided process. If you're not ready, nothing happens — no obligation.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What if the check says I'm not eligible yet?</summary>
+      <p>"Not yet" is often just "not yet" — for example, you may simply need to wait until you're within 90 days of your 3- or 5-year mark as a permanent resident. We'll tell you the reason, and you can book a consultation so an attorney can confirm your timeline or look at options the questionnaire can't see.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>The check is automated — is it legal advice?</summary>
+      <p>No. It's an estimate based on your answers and current USCIS requirements. A licensed attorney confirms your eligibility before anything is filed, and our <a href="{% url 'legal_notice' %}">Attorney–Client Notice</a> explains exactly when you become a client of the firm.</p>
+    </details>
+
+    <h2>Packages &amp; pricing</h2>
+
+    <details class="faq-item">
+      <summary>What's the difference between the three packages?</summary>
+      <p>All three include the full guided process, the latest official forms, a document checklist, and attorney time. The difference is how much of the work the firm does. <strong>DIY</strong>: you prepare and file everything yourself, with 60 minutes of attorney consultation to use when you need it. <strong>Enhanced</strong>: you still file, but an attorney reviews your complete application and evidence first and preps you for the interview. <strong>Full Service</strong>: the firm prepares and files for you, and an attorney is with you at your USCIS interview.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Does the price include the government filing fee?</summary>
+      <p>No — no honest provider's does. USCIS charges its own filing fee, which you pay directly to the government. As of [MONTH YEAR — verify at publication], the N-400 fee is $710 if filed online or $760 by mail, with no separate biometrics fee. Government fees change; the fee shown in your guided process links to the official USCIS fee page, which always controls.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I upgrade my package later?</summary>
+      <p>[FIRM DECISION — proposed: "Yes — you can move up to Enhanced or Full Service at any point before filing and pay only the difference." Confirm whether upgrades are allowed, at what stage, and at what price.]</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What's your refund policy?</summary>
+      <p>[PENDING FIRM POLICY — must match Terms of Service §6 exactly once decided.]</p>
+    </details>
+
+    <h2>The process</h2>
+
+    <details class="faq-item">
+      <summary>How long does naturalization take?</summary>
+      <p>It varies by USCIS field office and caseload — commonly several months to over a year from filing to oath. We can't speed up the government, but we can make sure your application is complete and well-documented, which avoids the delays you <em>can</em> control. USCIS publishes current processing times on its website, and your guided process links to them.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Do you guarantee my application will be approved?</summary>
+      <p>No — and you should be suspicious of anyone who does. Only the U.S. government decides applications. What we promise is diligent, competent work at the level of the package you choose.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Do I need to live in Texas to use LexImmigrate?</summary>
+      <p>No. Immigration law is federal, so the firm can assist with naturalization no matter which state you live in. [ATTORNEY CONFIRM: any state-specific limits she wants stated, and whether Full Service interview attendance is offered nationwide or within a region.]</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>¿Hablan español?</summary>
+      <p>Sí. [CONFIRM WORDING WITH FIRM — proposed: "Our team serves clients in Spanish, and a Spanish version of this site is on the way."]</p>
+    </details>
+
+    <h2>Trust &amp; privacy</h2>
+
+    <details class="faq-item">
+      <summary>Is my information safe?</summary>
+      <p>Protecting client information is a professional obligation for a law firm, not just a feature. Connections are encrypted, uploaded documents are scanned and stored encrypted with access limited to staff working on your matter, and accounts support two-factor authentication. The full picture is in our <a href="{% url 'legal_privacy' %}">Privacy Policy</a>.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Am I your client once I buy a package?</summary>
+      <p>The short version: browsing and the free check don't make you a client; purchasing a package and signing the engagement agreement is where the attorney–client relationship [CONFIRM TRIGGER — must match Attorney–Client Notice §2] begins, and the agreement defines exactly what the firm has taken on for you. The longer version is our <a href="{% url 'legal_notice' %}">Attorney–Client Notice</a>.</p>
+    </details>
+
+    <div class="faq-cta">
+      <p>Still wondering where you stand?</p>
+      <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-lg">Start the free eligibility check</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — LexImmigrate{% endblock %}
+
+{% block content %}
+<section class="legal">
+  <div class="wrap legal-wrap">
+
+    {# REMOVE this banner once Yohana approves the final text #}
+    <div class="draft-banner">DRAFT — pending attorney review. Not yet published policy.</div>
+
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p class="legal-updated">Last updated: [DATE — set on approval]</p>
+
+    <p class="legal-intro">LexImmigrate helps you work through a U.S. immigration application. To do that, we necessarily ask about some of the most personal information there is — your immigration status, your history, your documents. This policy explains what we collect, why, who can see it, and the choices you have. We've tried to write it the way we write everything else on this site: clearly.</p>
+
+    <h2>1. Who we are</h2>
+    <p>LexImmigrate is a service of <strong>YSL Immigration Lawyers</strong> ("the Firm," "we," "us"), a law firm founded by attorney Yohana Saucedo with offices in Austin and Laredo, Texas. The Firm is the controller of the personal information collected through this site.</p>
+    <p>Questions about this policy or your information: <strong>[PRIVACY CONTACT EMAIL]</strong> · [FIRM MAILING ADDRESS] · (512) 476-9950.</p>
+
+    <h2>2. What we collect</h2>
+    <p><strong>Information you give us.</strong></p>
+    <ul>
+      <li><strong>Contact details</strong> — name, email, and phone number, when you complete the eligibility check or create an account.</li>
+      <li><strong>Eligibility questionnaire answers</strong> — your responses about age, permanent-resident status, marital status, time in the United States, travel history, criminal history, tax filing history, Selective Service registration, and English ability.</li>
+      <li><strong>Account information</strong> — login credentials and, if you enable it, two-factor authentication details.</li>
+      <li><strong>Case information and documents</strong> — files you upload to your client portal (for example, your green card, tax records, or supporting evidence) and information you share with our attorneys and staff while we work on your matter.</li>
+      <li><strong>Payment information</strong> — payments are processed by Stripe, our payment processor. We receive confirmation of your payment and the package purchased; <strong>we do not receive or store your full card number</strong>.</li>
+    </ul>
+    <p><strong>Information collected automatically.</strong> Like most websites, we collect basic technical information — IP address, browser type, pages visited, and error reports — to keep the site secure and working. [CONFIRM: list any analytics/cookies actually deployed before launch; currently the platform uses only session cookies required for the site to function.]</p>
+
+    <h2>3. Sensitive information — and your consent</h2>
+    <p>Some of what the questionnaire asks about — including <strong>citizenship and immigration status</strong> — is treated as sensitive personal data under Texas law (the Texas Data Privacy and Security Act). We collect it for one reason: it is the information legally required to assess eligibility for the immigration benefit you're pursuing. By completing the eligibility check and submitting your contact details, you consent to our collection and use of this information for that purpose.</p>
+    <p><strong>We never sell your personal data — sensitive or otherwise — and we do not use it for advertising.</strong></p>
+
+    <h2>4. How we use your information</h2>
+    <ul>
+      <li>To assess your likely eligibility and recommend a service package.</li>
+      <li>To provide the services you purchase — guiding you through the application process, reviewing your documents, and (depending on your package) representing you.</li>
+      <li>To communicate with you about your case, your account, and your appointments.</li>
+      <li>To process payments and maintain required business records.</li>
+      <li>To secure the platform, prevent abuse, and fix problems.</li>
+      <li>To meet our legal and professional obligations as a law firm.</li>
+    </ul>
+    <p>We do not use your information for targeted advertising, and we do not make automated decisions about you that have legal effect — the eligibility check produces an estimate, and a licensed attorney confirms eligibility before anything is filed.</p>
+
+    <h2>5. Who we share it with</h2>
+    <p>We share personal information only with service providers who help us run the platform, and only as needed for them to do their jobs:</p>
+    <ul>
+      <li><strong>Stripe</strong> — payment processing.</li>
+      <li><strong>DigitalOcean</strong> — secure hosting and encrypted document storage.</li>
+      <li><strong>Postmark</strong> — sending transactional emails (receipts, status updates, reminders).</li>
+      <li><strong>Cal.com and monday.com</strong> — scheduling consultations and syncing appointments to the Firm's calendar system.</li>
+      <li><strong>Cloudflare</strong> — network security.</li>
+      <li><strong>Sentry</strong> — error monitoring, so we can find and fix technical problems.</li>
+    </ul>
+    <p>These providers are bound by their own contractual and confidentiality obligations and may not use your information for their own purposes. Beyond that, we disclose personal information only when required by law (for example, a valid court order), to protect the rights and safety of our clients, staff, or others, or with your direction — most obviously, to USCIS when we file your application as part of your service package.</p>
+
+    <h2>6. How we protect it</h2>
+    <ul>
+      <li>All connections to the site are encrypted (HTTPS).</li>
+      <li>Uploaded documents are stored encrypted, are virus-scanned before they become available, and are accessible only through short-lived, signed links.</li>
+      <li>Access to client information is restricted by role — only Firm staff who need your information to work on your matter can see it.</li>
+      <li>Staff and (optionally) client accounts are protected by two-factor authentication.</li>
+      <li>We keep an audit log of access to case records.</li>
+    </ul>
+    <p>No system is perfectly secure, but protecting client information is a professional obligation we take seriously as a law firm, not just a technical goal.</p>
+
+    <h2>7. How long we keep it</h2>
+    <p>We keep client files and case records for as long as needed to provide your services and to meet the Firm's legal and professional record-keeping obligations — <strong>[RETENTION PERIOD — firm policy, e.g., "at least X years after a matter closes"]</strong>. Questionnaire responses from visitors who do not become clients are kept for <strong>[LEAD RETENTION PERIOD]</strong> and then deleted.</p>
+
+    <h2>8. Your rights and choices</h2>
+    <p>You can ask us, at any time, to:</p>
+    <ul>
+      <li><strong>Access</strong> the personal information we hold about you and receive a copy of it;</li>
+      <li><strong>Correct</strong> information that is inaccurate;</li>
+      <li><strong>Delete</strong> your information, where we are not required to keep it (as a law firm, we are required to retain certain client records even after a matter ends).</li>
+    </ul>
+    <p>To exercise any of these rights, contact us at <strong>[PRIVACY CONTACT EMAIL]</strong>. We will respond within 45 days. If we decline a request, we will tell you why, and you may appeal by replying to our response; if you are a Texas resident and remain unsatisfied, you may contact the Texas Attorney General.</p>
+
+    <h2>9. Children</h2>
+    <p>LexImmigrate is for adults. You must be 18 or older to use the eligibility check or purchase services, and we do not knowingly collect information from anyone under 18.</p>
+
+    <h2>10. A note on attorney–client confidentiality</h2>
+    <p>This policy describes how we handle personal data as a website operator. If you become a client of the Firm, the information you share with us in that relationship is additionally protected by the attorney's duty of confidentiality and, where it applies, attorney–client privilege — protections that are generally stronger than data-privacy law. See our <a href="{% url 'legal_notice' %}">Attorney–Client Notice</a> for when that relationship begins.</p>
+
+    <h2>11. Changes to this policy</h2>
+    <p>If we change this policy in a meaningful way, we will update the date at the top and, for significant changes, notify account holders by email. Continued use of the site after a change takes effect means the updated policy applies.</p>
+
+    <h2>12. Contact</h2>
+    <p>YSL Immigration Lawyers · [FIRM MAILING ADDRESS] · (512) 476-9950 · <strong>[PRIVACY CONTACT EMAIL]</strong></p>
+
+  </div>
+</section>
+{% endblock %}

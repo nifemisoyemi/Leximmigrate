@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Attorney–Client Notice — LexImmigrate{% endblock %}
+
+{% block content %}
+<section class="legal">
+  <div class="wrap legal-wrap">
+
+    {# REMOVE this banner once Yohana approves the final text #}
+    <div class="draft-banner">DRAFT — pending attorney review. Not yet published notice.</div>
+
+    <span class="eyebrow">Legal</span>
+    <h1>Attorney–Client Notice</h1>
+    <p class="legal-updated">Last updated: [DATE — set on approval]</p>
+
+    <p class="legal-intro">LexImmigrate is a service of a real law firm, and that comes with real rules about when you are — and are not — our client. This notice explains it plainly, because the difference matters for your rights.</p>
+
+    <h2>1. Using this website does not make you our client</h2>
+    <p>Browsing this site, reading our guides, completing the free eligibility check, or sending us your contact information <strong>does not create an attorney–client relationship</strong> with YSL Immigration Lawyers. The eligibility check is an automated estimate based on your answers — it is general information about the law's requirements, not legal advice about your situation.</p>
+
+    <h2>2. When the attorney–client relationship begins</h2>
+    <p>An attorney–client relationship with the Firm is formed when <strong>[TRIGGER — ATTORNEY TO CONFIRM. Proposed: "you purchase a package, the Firm completes its conflicts check, and both you and the Firm sign a written engagement agreement." Alternative: relationship forms at purchase, subject to the engagement agreement.]</strong> The engagement agreement — not this website — defines the scope of what the Firm has agreed to do for you.</p>
+
+    <h2>3. The scope of representation depends on your package</h2>
+    <p>Texas permits attorneys to provide <em>limited-scope</em> representation — handling defined parts of a matter rather than all of it — with the client's informed consent. That is how our packages work:</p>
+    <ul>
+      <li><strong>DIY</strong> — you prepare and file your own application. The Firm provides the guided process and a set amount of attorney consultation time. The Firm does not review your completed application or represent you before USCIS.</li>
+      <li><strong>Enhanced</strong> — you prepare and file your own application, and the Firm additionally reviews your full application and evidence before you file and helps you prepare for your interview. The Firm does not file for you or appear with you.</li>
+      <li><strong>Full Service</strong> — the Firm represents you fully: preparing, filing, and tracking your application, and appearing with you at your USCIS interview.</li>
+    </ul>
+    <p>Your engagement agreement will state your package's exact scope. Anything outside that scope is not part of the representation unless you and the Firm agree to it in writing.</p>
+
+    <h2>4. Confidentiality — before and after you become a client</h2>
+    <p>We treat everything you submit through this site as confidential and handle it as described in our <a href="{% url 'legal_privacy' %}">Privacy Policy</a>. But you should know the legal distinction:</p>
+    <ul>
+      <li><strong>Before</strong> an attorney–client relationship exists, information you send us may not be protected by attorney–client privilege. Please don't send detailed case documents until we've asked for them through your client portal.</li>
+      <li><strong>After</strong> the relationship begins, what you share with the Firm in the course of the representation is protected by the attorney's professional duty of confidentiality and, where it applies, attorney–client privilege.</li>
+    </ul>
+
+    <h2>5. No guarantee of results</h2>
+    <p>Past results — including the experiences described in testimonials on this site — do not guarantee the outcome of your case. Every immigration matter depends on its own facts, and decisions rest with the U.S. government.</p>
+
+    <h2>6. Licensure and advertising</h2>
+    <p>YSL Immigration Lawyers is a Texas law firm. Its attorneys are licensed in [JURISDICTION(S) — CONFIRM]. Immigration law is federal, which allows the Firm to assist clients with federal immigration matters regardless of the state where they live; the Firm does not advise on other states' laws. [ATTORNEY TO CONFIRM whether any additional advertising disclosures are required, including the firm's principal-office designation under the Texas Disciplinary Rules.]</p>
+
+    <h2>7. Questions</h2>
+    <p>If you're unsure whether you are a client of the Firm, or what your package covers — ask. YSL Immigration Lawyers · Austin &amp; Laredo, TX · (512) 476-9950 · [CONTACT EMAIL].</p>
+
+  </div>
+</section>
+{% endblock %}

@@ -22,4 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("eligibility/", include("quiz.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("privacy/", TemplateView.as_view(template_name="legal/privacy.html"), name="legal_privacy"),
+    path("terms/", TemplateView.as_view(template_name="legal/terms.html"), name="legal_terms"),
+    path("attorney-client-notice/", TemplateView.as_view(template_name="legal/attorney_client_notice.html"), name="legal_notice"),
+    path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
 ]
