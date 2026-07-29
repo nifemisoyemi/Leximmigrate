@@ -65,7 +65,7 @@ def question(request):
         if state["disqualified"]:
             state["current_id"] = None
             request.session[SESSION_KEY] = state
-            return redirect("quiz:contact")
+            return redirect("quiz:result")
 
         state["current_id"] = next_q.id if next_q else None
         request.session[SESSION_KEY] = state
@@ -95,7 +95,7 @@ def _handle_answer(request, current, state):
         state["base_level"] = max(state["base_level"] or 0, option.recommends_tier.level)
     if option.is_disqualifying:
         state["disqualified"] = True
-        state["stop_reason"] = option.label
+        state["stop_reason"] = option.stop_message or "Based on your answers, you don't meet one of the requirements yet."
         return None
 
     return option.skip_to or _next_in_order(current)
@@ -111,11 +111,14 @@ def _next_in_order(current):
 
 
 def _progress(current):
-    total = current.questionnaire.questions.count()
+    """Path-aware:count questions actually shown, not raw table order."""
+    total_visible = 10 # 3 shared + 3 in one path + 4 converged
+    ORDER_TO_STEP = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 4, 8: 5, 9: 6, 10: 7, 11: 8, 13: 9, 14: 10}
+    step = ORDER_TO_STEP.get(current.order, current.order)
     return {
-        "current": current.order,
-        "total": total,
-        "pct": int(current.order / total * 100) if total else 0,
+        "current": step,
+        "total": total_visible,
+        "pct": int(step / total_visible * 100),
     }
 
 
@@ -123,6 +126,9 @@ def contact(request):
     state = request.session.get(SESSION_KEY)
     if not state:
         return redirect("quiz:start")
+
+    if state.get("disqualified"):
+        return redirect("quiz:result")
 
     if request.method == "POST":
         form = ContactForm(request.POST)
@@ -190,21 +196,51 @@ def _notify_firm(lead):
         fail_silently=True,
     )
 
+def followup(request):
+    """Optional 'still want to talk?' form on the STOP result page."""
+    state = request.session.get(SESSION_KEY)
+    if not state or not state.get("disqualified"):
+        return redirect("quiz:start")
+
+    if request.method != "POST":
+        return redirect("quiz:result")
+
+    form = ContactForm(request.POST)
+    if not form.is_valid():
+        return render(request, "quiz/result.html", {
+            "lead": None,
+            "disqualified": True,
+            "stop_reason": state.get("stop_reason", ""),
+            "followup_form": form,   # re-render with errors
+        })
+
+    _create_lead(form.cleaned_data, state)   # likely_eligible=False, package=None
+    request.session[SESSION_KEY + "_followup_done"] = True
+    return redirect("quiz:result")
 
 def result(request):
     state = request.session.get(SESSION_KEY)
-    lead_id = request.session.get(LEAD_KEY)
-    if not state or not lead_id:
+    if not state:
         return redirect("quiz:start")
 
-    lead = (
-        Lead.objects
-        .select_related("recommended_package__tier")
-        .filter(id=lead_id)
-        .first()
-    )
+    disqualified = state.get("disqualified", False)
+
+    lead = None
+    if not disqualified:
+        lead_id = request.session.get(LEAD_KEY)
+        if not lead_id:
+            return redirect("quiz:start")
+        lead = (
+            Lead.objects
+            .select_related("recommended_package__tier")
+            .filter(id=lead_id)
+            .first()
+        )
+
     return render(request, "quiz/result.html", {
         "lead": lead,
-        "disqualified": state.get("disqualified", False),
+        "disqualified": disqualified,
         "stop_reason": state.get("stop_reason", ""),
+        "followup_form": ContactForm(),
+        "followup_done": request.session.get(SESSION_KEY + "_followup_done", False),
     })

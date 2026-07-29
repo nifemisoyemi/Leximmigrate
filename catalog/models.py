@@ -175,6 +175,10 @@ class QuestionOption(models.Model):
     value = models.CharField(max_length=100)
     order = models.PositiveIntegerField(default=0)
     is_disqualifying = models.BooleanField(default=False)
+    stop_message = models.TextField(
+        blank=True,
+        help_text="Shown to the visitor when this disqualifying answer ends the quiz.",
+    )
     skip_to = models.ForeignKey("Question", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     is_flag = models.BooleanField(default=False)
     flag_strength = models.PositiveSmallIntegerField(default=1)

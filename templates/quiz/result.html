@@ -8,8 +8,22 @@
     <div class="quiz-step">Eligibility check</div>
     <h1>You're not quite eligible yet</h1>
     <p>{{ stop_reason }}</p>
-    <p>This is exactly the kind of thing our attorneys can help you plan for. Book a consultation and we'll map out your path to citizenship.</p>
-    <a href="#" class="btn btn-primary btn-lg" style="margin-top:14px">Book a consultation</a>
+    {% if followup_done %}
+      <p style="margin-top:18px"><strong>Got it — someone will follow up with you.</strong></p>
+    {% else %}
+      <p style="margin-top:18px">Still think you may be eligible, or want to talk through your immigration case? Leave your details and someone will follow up with you.</p>
+      <form method="post" action="{% url 'quiz:followup' %}" style="text-align:left;margin-top:14px">
+        {% csrf_token %}
+        {% if followup_form.errors %}<div class="quiz-err">Please check the highlighted fields and try again.</div>{% endif %}
+        <div class="field"><label for="id_first_name">First name</label>{{ followup_form.first_name }}</div>
+        <div class="field"><label for="id_last_name">Last name</label>{{ followup_form.last_name }}</div>
+        <div class="field"><label for="id_email">Email</label>{{ followup_form.email }}</div>
+        <div class="field"><label for="id_phone">Phone</label>{{ followup_form.phone }}</div>
+        <div class="quiz-actions" style="justify-content:center">
+          <button type="submit" class="btn btn-primary">Request a follow-up</button>
+        </div>
+      </form>
+    {% endif %}
   {% else %}
     <div class="quiz-step">Good news</div>
     <h1>You're likely eligible</h1>
