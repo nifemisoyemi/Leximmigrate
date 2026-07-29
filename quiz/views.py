@@ -7,6 +7,7 @@ from catalog.models import Package, Question, Questionnaire, Tier
 from cases.models import Lead
 
 from .forms import ContactForm
+from cases.monday import REASON_NOT_ELIGIBLE, push_lead
 
 # Everything the quiz needs between requests lives in the session under this key.
 SESSION_KEY = "quiz"
@@ -214,7 +215,8 @@ def followup(request):
             "followup_form": form,   # re-render with errors
         })
 
-    _create_lead(form.cleaned_data, state)   # likely_eligible=False, package=None
+    lead = _create_lead(form.cleaned_data, state)
+    push_lead(lead, REASON_NOT_ELIGIBLE, details=state.get("stop_reason", ""))
     request.session[SESSION_KEY + "_followup_done"] = True
     return redirect("quiz:result")
 
