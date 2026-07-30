@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm your package — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap confirm-wrap">
+    <span class="eyebrow">One thing to confirm</span>
+    <h2>You've chosen {{ package.tier.name }}.</h2>
+    <div class="confirm-card">
+      <div class="price">{{ package.price_display }} <span>one-time</span></div>
+      {% if package.tier.tagline %}<p class="who">{{ package.tier.tagline }}</p>{% endif %}
+      {% if error %}<div class="quiz-err">{{ error }}</div>{% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <label class="ack">
+          <input type="checkbox" name="acknowledge">
+          <span>I understand that all packages are one-time purchases and <strong>non-refundable</strong>. If I want to change packages later, I'll need to purchase separately.</span>
+        </label>
+        <div class="confirm-actions">
+          <a href="{% url 'checkout:packages' %}" class="btn btn-ghost">Go back</a>
+          <button type="submit" class="btn btn-primary btn-lg">Continue to create my account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

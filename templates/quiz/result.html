@@ -33,7 +33,7 @@
       {% if lead.recommended_package.tier.tagline %}<p>{{ lead.recommended_package.tier.tagline }}</p>{% endif %}
     {% endif %}
     <p style="margin-top:10px;font-size:.9rem">This is an estimate, not legal advice — a licensed attorney confirms your eligibility before you file.</p>
-    <a href="#" class="btn btn-primary btn-lg" style="margin-top:14px">Continue to your package</a>
+    <a href="{% url 'checkout:packages' %}" class="btn btn-primary btn-lg" style="margin-top:14px">Continue to your package</a>
   {% endif %}
   </div>
 {% endblock %}

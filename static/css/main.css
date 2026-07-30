@@ -186,3 +186,21 @@ footer a:hover{color:#fff}
   border-radius:var(--radius);padding:36px 24px}
 .faq-cta p{font-family:"Fraunces",serif;font-size:1.3rem;margin-bottom:1rem;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.faq-item summary::after{transition:none}}
+
+/* --- Checkout ------------------------------------------------------------ */
+.checkout-banner{background:var(--honey-soft);border:1.5px solid var(--honey);border-radius:12px;
+  padding:14px 18px;font-weight:600;margin-bottom:28px}
+.help-strip{margin-top:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;background:var(--sky);border-radius:var(--radius);padding:22px 26px}
+.help-strip p{color:var(--ink);font-weight:500;max-width:52ch}
+.confirm-wrap{max-width:640px;padding:64px 24px 90px}
+.confirm-card{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;
+  padding:34px 30px;margin-top:18px;box-shadow:0 18px 40px -28px rgba(18,40,59,.4)}
+.confirm-card .price{font-size:1.6rem;font-weight:700;margin-bottom:6px}
+.confirm-card .price span{font-weight:400;color:var(--muted);font-size:.9rem}
+.confirm-card .who{color:var(--muted);margin-bottom:18px}
+.ack{display:flex;gap:12px;align-items:flex-start;background:var(--honey-soft);
+  border-radius:12px;padding:16px;margin:14px 0 22px;cursor:pointer}
+.ack input{width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:var(--brand)}
+.ack span{font-size:.96rem;line-height:1.5}
+.confirm-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}

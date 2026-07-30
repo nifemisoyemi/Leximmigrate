@@ -71,12 +71,19 @@ class Command(BaseCommand):
             )
             self.stdout.write(("Created " if created else "Updated ") + f"step {order}: {title}")
 
-        # --- Packages: N-400 x each tier. Placeholder price (0) — set real prices in admin. ---
+        # --- Packages: N-400 x each tier, at launch prices (decided 11-12:30 meeting).
+        # get_or_create: only sets prices on FIRST creation — re-running never
+        # overwrites prices adjusted in the admin.
+        prices = {
+            Tier.Level.DIY: 142000,           # $1,420
+            Tier.Level.ENHANCED: 192000,      # $1,920
+            Tier.Level.FULL_SERVICE: 350000,  # $3,500
+        }
         for level, tier in tier_objs.items():
             obj, created = Package.objects.get_or_create(
                 application_type=n400, tier=tier,
-                defaults=dict(price_cents=0, is_active=True),
+                defaults=dict(price_cents=prices[level], is_active=True),
             )
             self.stdout.write(("Created " if created else "Exists ") + f"package: {n400.code} {tier.name}")
-
+            
         self.stdout.write(self.style.SUCCESS("Catalog seed complete."))

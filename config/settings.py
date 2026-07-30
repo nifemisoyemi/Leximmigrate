@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "catalog",
     "cases",
     "quiz",
+    "checkout",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Choose your package — LexImmigrate{% endblock %}
+
+{% block content %}
+<section id="packages">
+  <div class="wrap">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="checkout-banner">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="sec-head">
+      <span class="eyebrow">Good news, {{ lead.first_name }}</span>
+      <h2>Choose how much help you want.</h2>
+      <p>Based on your answers, we've marked the package we recommend — but the choice is yours. All packages are one-time purchases and non-refundable, so choose with confidence.</p>
+    </div>
+
+    <div class="tiers">
+      {% for package in packages %}
+      <div class="tier{% if package.id == recommended_id %} featured{% endif %}">
+        {% if package.id == recommended_id %}<span class="flag">Recommended for you</span>{% endif %}
+        <div class="name">{{ package.tier.name }}</div>
+        {% if package.tier.tagline %}<div class="who">{{ package.tier.tagline }}</div>{% endif %}
+        <div class="price">{{ package.price_display }} <span>one-time</span></div>
+        <ul>
+          <li>Step-by-step guided process, official forms &amp; document checklist</li>
+          <li>{{ package.tier.attorney_minutes }} minutes with a licensed immigration attorney</li>
+          {% if package.tier.includes_document_review %}<li>Full application &amp; evidence review before you file</li>{% endif %}
+          {% if package.tier.includes_interview_coaching %}<li>USCIS interview preparation</li>{% endif %}
+          {% if package.tier.includes_representation %}<li>An attorney prepares, files &amp; represents you — including at your USCIS interview</li>{% endif %}
+        </ul>
+        {% if package.tier.includes_representation %}
+          <div class="price-note">Travel expenses for interview attendance not included.</div>
+        {% endif %}
+        <a href="{% url 'checkout:confirm' package.id %}" class="btn {% if package.id == recommended_id %}btn-primary{% else %}btn-ghost{% endif %}">Choose {{ package.tier.name }}</a>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if not help_sent %}
+    <div class="help-strip">
+      <p>Not sure which package fits? Packages are non-refundable — so if you're on the fence, talk to us first.</p>
+      <form method="post" action="{% url 'checkout:help' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost">Have someone contact me</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
