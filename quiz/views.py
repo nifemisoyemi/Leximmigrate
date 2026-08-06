@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from catalog.models import Package, Question, Questionnaire, Tier
+from catalog.models import Package, Question, QuestionOption, Questionnaire, Tier
 from cases.models import Lead
 
 from .forms import ContactForm
@@ -31,6 +31,7 @@ def _fresh_state():
         "disqualified": False,
         "stop_reason": "",
         "current_id": None,
+        "history": [],
     }
 
 def start(request):
@@ -39,21 +40,22 @@ def start(request):
 
 def begin(request):
     """Reset state and jump to the first question."""
+    # Reset the funnel FIRST — retaking invalidates everything downstream,
+    # unconditionally, even if the questionnaire is temporarily unavailable.
+    request.session.pop(LEAD_KEY, None)
+    request.session.pop(SESSION_KEY + "_followup_done", None)
+    request.session.pop("checkout", None)
+    request.session.pop("checkout_help_sent", None)
+
     questionnaire = _active_questionnaire()
     if not questionnaire:
+        request.session.pop(SESSION_KEY, None)   # no stale quiz state either
         return HttpResponse("The eligibility check isn't available yet. (Run seed_questionnaire.)")
 
     first = questionnaire.questions.first()
     state = _fresh_state()
     state["current_id"] = first.id if first else None
     request.session[SESSION_KEY] = state
-    request.session.pop(LEAD_KEY, None)
-    # Retaking the quiz invalidates everything downstream of it.
-    # (Literals, not imports from checkout — checkout imports quiz, so
-    # importing back would be circular.)
-    request.session.pop(SESSION_KEY + "_followup_done", None)
-    request.session.pop("checkout", None)
-    request.session.pop("checkout_help_sent", None)
 
     return redirect("quiz:question") if first else redirect("quiz:contact")
 
@@ -77,6 +79,8 @@ def question(request):
             request.session[SESSION_KEY] = state
             return redirect("quiz:result")
 
+        if next_q is None or next_q.id != current.id:      # don't log invalid re-renders
+            state.setdefault("history", []).append(current.id)
         state["current_id"] = next_q.id if next_q else None
         request.session[SESSION_KEY] = state
         return redirect("quiz:question") if next_q else redirect("quiz:contact")
@@ -84,6 +88,7 @@ def question(request):
     return render(request, "quiz/question.html", {
         "question": current,
         "progress": _progress(current),
+        "has_back": bool(state.get("history")),
     })
 
 
@@ -110,6 +115,30 @@ def _handle_answer(request, current, state):
 
     return option.skip_to or _next_in_order(current)
 
+def _recompute(state):
+    """Rebuild flag/tier state from surviving answers (after a Back)."""
+    state["flag_score"] = 0
+    state["base_level"] = None
+    for qid, value in state["answers"].items():
+        opt = QuestionOption.objects.filter(question_id=qid, value=value).select_related("recommends_tier").first()
+        if not opt:
+            continue
+        if opt.is_flag:
+            state["flag_score"] += opt.flag_strength
+        if opt.recommends_tier_id:
+            state["base_level"] = max(state["base_level"] or 0, opt.recommends_tier.level)
+
+
+def back(request):
+    state = request.session.get(SESSION_KEY)
+    if not state or not state.get("history"):
+        return redirect("quiz:question")
+    prev_id = state["history"].pop()
+    state["answers"].pop(str(prev_id), None)
+    state["current_id"] = prev_id
+    _recompute(state)
+    request.session[SESSION_KEY] = state
+    return redirect("quiz:question")
 
 def _next_in_order(current):
     return (

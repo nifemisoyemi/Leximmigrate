@@ -137,7 +137,7 @@ class Command(BaseCommand):
         add_opt(q8, "I'm not sure", "unsure", 2, flag=True)
 
         add_opt(q10, "Yes", "yes", 0)
-        add_opt(q10, "No", "no", 1, flag=True)
+        add_opt(q10, "No, I may need extra support", "no", 1, flag=True)
         add_opt(q10, "I'm not sure", "unsure", 2, flag=True)
 
         add_opt(q11, "I'm confident doing it myself", "diy", 0, tier=Tier.Level.DIY)

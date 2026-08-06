@@ -24,6 +24,7 @@
       </div>
     {% endif %}
     <div class="quiz-actions">
+      {% if has_back %}<a href="{% url 'quiz:back' %}" class="btn btn-ghost">← Back</a>{% endif %}
       <button type="submit" class="btn btn-primary btn-lg">Continue</button>
     </div>
   </form>

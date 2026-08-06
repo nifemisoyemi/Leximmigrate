@@ -194,7 +194,7 @@ class StopFlowTests(QuizTestBase):
         mock_push.assert_called_once()
         # confirmation state renders, form is gone
         resp = self.client.get(reverse("quiz:result"))
-        self.assertContains(resp, "someone will follow up")
+        self.assertContains(resp, "sent to our team")
 
     def test_followup_rejected_without_active_disqualified_session(self):
         resp = self.client.post(reverse("quiz:followup"), {
