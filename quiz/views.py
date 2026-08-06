@@ -140,6 +140,19 @@ def contact(request):
     if state.get("disqualified"):
         return redirect("quiz:result")
 
+    if request.user.is_authenticated:
+        lead = _create_lead({
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+            "phone": request.user.phone,
+        }, state)
+        lead.converted_user = request.user
+        lead.status = Lead.Status.CONVERTED
+        lead.save(update_fields=["converted_user", "status"])
+        request.session[LEAD_KEY] = lead.id
+        return redirect("quiz:result")
+
     if state.get("current_id"):
         return redirect("quiz:question")
 

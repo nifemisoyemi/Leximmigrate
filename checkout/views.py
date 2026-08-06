@@ -89,10 +89,10 @@ def confirm(request, package_id):
     )
 
     if request.method == "POST":
-        if request.POST.get("acknowledge") != "on":
+        if request.POST.get("acknowledge") != "on" or request.POST.get("agree_terms") != "on":
             return render(request, "checkout/confirm.html", {
                 "package": package,
-                "error": "Please confirm you understand that packages are non-refundable.",
+                "error": "Please check both boxes to continue — the refund policy and the terms.",
             })
         request.session[CHECKOUT_KEY] = {"package_id": package.id, "acknowledged": True}
         if request.user.is_authenticated:
@@ -113,7 +113,7 @@ def help_me(request):
         rec = lead.recommended_package.tier.name if lead.recommended_package else "none"
         push_lead(lead, REASON_PACKAGE_QUESTION, details=f"Recommended: {rec}. Wants help choosing a package.")
         request.session[HELP_SENT_KEY] = True
-        messages.success(request, "Got it — someone will get in touch to help you choose.")
+        messages.success(request, "Got it — your information has been sent to our team, and someone will reach out within 3-5 business days to help you choose.")
     return redirect("checkout:packages")
 
 

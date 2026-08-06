@@ -14,7 +14,11 @@
         <li>Free to take, no account or payment needed — answer a few plain-language questions and see your result</li>
       </ul>
       <a href="{% url 'quiz:begin' %}" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Start the eligibility check</a>
-      <p class="auth-alt">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+      {% if user.is_authenticated %}
+        <p class="auth-alt">Don't need to retake the quiz? <a href="{% url 'accounts:home' %}">Back to my packages</a></p>
+      {% else %}
+        <p class="auth-alt">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+      {% endif %}
     </div>
   </div>
 </section>

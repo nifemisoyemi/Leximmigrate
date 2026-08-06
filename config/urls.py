@@ -18,11 +18,13 @@ from checkout.views import stripe_webhook
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("eligibility/", include("quiz.urls")),
     path("packages/", include("checkout.urls")),
+    path("account/login/", auth_views.LoginView.as_view(redirect_authenticated_user=True), name="login"),
     path("account/", include("accounts.urls")),
     path("account/", include("django.contrib.auth.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),

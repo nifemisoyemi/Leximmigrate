@@ -9,7 +9,7 @@
     <h1>You're not quite eligible yet</h1>
     <p>{{ stop_reason }}</p>
     {% if followup_done %}
-      <p style="margin-top:18px"><strong>Got it — someone will follow up with you.</strong></p>
+      <p style="margin-top:18px"><strong>Got it — your information has been sent to our team. Someone will follow up within 3-5 business days.</strong></p>
     {% else %}
       <p style="margin-top:18px">Still think you may be eligible, or want to talk through your immigration case? Leave your details and someone will follow up with you.</p>
       <form method="post" action="{% url 'quiz:followup' %}" style="text-align:left;margin-top:14px">
