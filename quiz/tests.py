@@ -62,7 +62,7 @@ class QuizTestBase(TestCase):
     # -- driving helpers ------------------------------------------------------
 
     def start(self):
-        return self.client.get(reverse("quiz:start"), follow=False)
+        return self.client.get(reverse("quiz:begin"), follow=False)
 
     def current_question(self):
         state = self.client.session.get(SESSION_KEY)
@@ -201,7 +201,7 @@ class StopFlowTests(QuizTestBase):
             "first_name": "X", "last_name": "Y",
             "email": "x@example.com", "phone": "5125550122",
         })
-        self.assertRedirects(resp, reverse("quiz:start"), target_status_code=302)
+        self.assertRedirects(resp, reverse("quiz:start"))
         self.assertEqual(Lead.objects.count(), 0)
 
 
@@ -239,12 +239,12 @@ class RecommendationMatrixTests(QuizTestBase):
 class GuardTests(QuizTestBase):
     def test_question_page_without_session_redirects_to_start(self):
         resp = self.client.get(reverse("quiz:question"))
-        self.assertRedirects(resp, reverse("quiz:start"), target_status_code=302)
+        self.assertRedirects(resp, reverse("quiz:start"))
 
     def test_result_without_lead_redirects_to_start(self):
         self.walk()                       # eligible walk, but no contact submitted
         resp = self.client.get(reverse("quiz:result"))
-        self.assertRedirects(resp, reverse("quiz:start"), target_status_code=302)
+        self.assertRedirects(resp, reverse("quiz:start"))
 
     def test_contact_requires_phone(self):
         self.walk()

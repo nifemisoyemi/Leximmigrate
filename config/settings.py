@@ -25,6 +25,9 @@ DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
 MONDAY_API_TOKEN = env("MONDAY_API_TOKEN", default="")
 MONDAY_BOARD_ID = env("MONDAY_BOARD_ID", default="")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
 
 # --- Applications --------------------------------------------------------
 INSTALLED_APPS = [
@@ -106,7 +109,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Login redirects -----------------------------------------------------
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "accounts:home"
 LOGOUT_REDIRECT_URL = "/"
 
 # --- Email config --------------------------------------------------------

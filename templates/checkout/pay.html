@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Payment — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap confirm-wrap">
+    <span class="eyebrow">Last step</span>
+    <h2>Review and pay.</h2>
+    <div class="confirm-card">
+      <div class="name" style="font-family:'Fraunces',serif;font-size:1.5rem;margin-bottom:4px">{{ package.tier.name }}</div>
+      <p class="who">{{ package.application_type.name }} ({{ package.application_type.code }})</p>
+      <div class="price">{{ package.price_display }} <span>one-time · non-refundable</span></div>
+      <p style="color:var(--muted);font-size:.92rem;margin:10px 0 20px">
+        You'll be taken to Stripe, our secure payment processor, to complete your purchase.
+        Government filing fees are separate and paid directly to USCIS later in your process.
+      </p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Pay securely with Stripe</button>
+      </form>
+      <p class="auth-alt"><a href="{% url 'checkout:packages' %}">Change package</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

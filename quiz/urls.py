@@ -6,8 +6,9 @@ app_name = "quiz"
 
 urlpatterns = [
     path("", views.start, name="start"),
+    path("begin/", views.begin, name="begin"),
     path("question/", views.question, name="question"),
     path("contact/", views.contact, name="contact"),
-    path("result/", views.result, name="result"),
     path("followup/", views.followup, name="followup"),
+    path("result/", views.result, name="result"),
 ]

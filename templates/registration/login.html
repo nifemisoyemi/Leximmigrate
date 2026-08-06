@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Log in — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap auth-wrap">
+    <span class="eyebrow">Welcome back</span>
+    <h2>Log in.</h2>
+    <div class="auth-card">
+      <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}<div class="quiz-err">Your email and password didn't match. Please try again.</div>{% endif %}
+        <div class="field"><label for="id_username">Email</label>{{ form.username }}</div>
+        <div class="field"><label for="id_password">Password</label>{{ form.password }}</div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Log in</button>
+        <input type="hidden" name="next" value="{{ next }}">
+      </form>
+      <p class="auth-alt"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+      <p class="auth-alt">New here? <a href="{% url 'quiz:start' %}">Start with the free eligibility check</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

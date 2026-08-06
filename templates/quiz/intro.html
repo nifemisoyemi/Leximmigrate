@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}See if you qualify — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap auth-wrap" style="max-width:640px">
+    <span class="eyebrow">Free eligibility check</span>
+    <h2>Find out where you stand — in about two minutes.</h2>
+    <div class="auth-card" style="margin-top:18px">
+      <ul class="intro-list">
+        <li>See how much attorney help you want — from doing it yourself to full representation</li>
+        <li>File yourself, or have an attorney prepare and file everything for you</li>
+        <li>Free to take, no account or payment needed — answer a few plain-language questions and see your result</li>
+      </ul>
+      <a href="{% url 'quiz:begin' %}" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Start the eligibility check</a>
+      <p class="auth-alt">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

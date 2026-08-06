@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Your case — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap confirm-wrap">
+    <span class="eyebrow">Your case</span>
+    <h2>{{ case.package.tier.name }} — {{ case.application_type.name }}</h2>
+    <div class="confirm-card">
+      <p>Your guided process is ready. This page becomes your full client portal in the next phase of the build — your case, steps, documents, and scheduling will all live here.</p>
+      <p style="color:var(--muted);margin-top:10px">Case #{{ case.pk }} · started {{ case.created_at|date:"M j, Y" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

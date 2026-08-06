@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from checkout.views import stripe_webhook
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
@@ -22,9 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("eligibility/", include("quiz.urls")),
     path("packages/", include("checkout.urls")),
+    path("account/", include("accounts.urls")),
+    path("account/", include("django.contrib.auth.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("privacy/", TemplateView.as_view(template_name="legal/privacy.html"), name="legal_privacy"),
     path("terms/", TemplateView.as_view(template_name="legal/terms.html"), name="legal_terms"),
     path("attorney-client-notice/", TemplateView.as_view(template_name="legal/attorney_client_notice.html"), name="legal_notice"),
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
+    path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
 ]

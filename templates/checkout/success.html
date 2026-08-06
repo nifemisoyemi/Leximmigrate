@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Payment {% if paid %}confirmed{% else %}processing{% endif %} — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap confirm-wrap">
+    {% if paid %}
+      <span class="eyebrow">Payment confirmed</span>
+      <h2>Welcome aboard, {{ request.user.first_name }}.</h2>
+      <div class="confirm-card">
+        <p>Your <strong>{{ payment.package.tier.name }}</strong> package is active and your case has been created.</p>
+        <p style="color:var(--muted);margin-top:8px">A receipt has been sent to {{ request.user.email }} by Stripe.</p>
+        <a href="{% url 'checkout:done' %}" class="btn btn-primary btn-lg" style="margin-top:18px;width:100%;justify-content:center">Go to my case</a>
+      </div>
+    {% else %}
+      <span class="eyebrow">One moment</span>
+      <h2>Confirming your payment…</h2>
+      <div class="confirm-card">
+        <p>Stripe has received your payment and we're confirming it — this usually takes a few seconds.</p>
+        <a href="" class="btn btn-ghost" style="margin-top:16px">Refresh</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

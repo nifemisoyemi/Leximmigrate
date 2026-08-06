@@ -33,8 +33,11 @@ def _fresh_state():
         "current_id": None,
     }
 
-
 def start(request):
+    """Informational landing before the quiz. The actual reset lives in begin()."""
+    return render(request, "quiz/intro.html")
+
+def begin(request):
     """Reset state and jump to the first question."""
     questionnaire = _active_questionnaire()
     if not questionnaire:
@@ -45,6 +48,12 @@ def start(request):
     state["current_id"] = first.id if first else None
     request.session[SESSION_KEY] = state
     request.session.pop(LEAD_KEY, None)
+    # Retaking the quiz invalidates everything downstream of it.
+    # (Literals, not imports from checkout — checkout imports quiz, so
+    # importing back would be circular.)
+    request.session.pop(SESSION_KEY + "_followup_done", None)
+    request.session.pop("checkout", None)
+    request.session.pop("checkout_help_sent", None)
 
     return redirect("quiz:question") if first else redirect("quiz:contact")
 
@@ -130,6 +139,9 @@ def contact(request):
 
     if state.get("disqualified"):
         return redirect("quiz:result")
+
+    if state.get("current_id"):
+        return redirect("quiz:question")
 
     if request.method == "POST":
         form = ContactForm(request.POST)

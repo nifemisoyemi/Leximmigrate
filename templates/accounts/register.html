@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Create your account — LexImmigrate{% endblock %}
+
+{% block content %}
+<section>
+  <div class="wrap auth-wrap">
+    <span class="eyebrow">Almost there</span>
+    <h2>Create your account.</h2>
+    <p class="auth-lead">Your account is where your guided process, documents, and appointments will live.</p>
+    <div class="auth-card">
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="quiz-err">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="field"><label for="id_first_name">First name</label>{{ form.first_name }}{{ form.first_name.errors }}</div>
+        <div class="field"><label for="id_last_name">Last name</label>{{ form.last_name }}{{ form.last_name.errors }}</div>
+        <div class="field"><label for="id_email">Email</label>{{ form.email }}{{ form.email.errors }}
+          <small>You'll use this to log in.</small></div>
+        <div class="field"><label for="id_phone">Phone</label>{{ form.phone }}{{ form.phone.errors }}</div>
+        <div class="field"><label for="id_password1">Password</label>{{ form.password1 }}{{ form.password1.errors }}</div>
+        <div class="field"><label for="id_password2">Confirm password</label>{{ form.password2 }}{{ form.password2.errors }}</div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Create account &amp; continue</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

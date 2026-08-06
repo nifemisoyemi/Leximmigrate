@@ -22,7 +22,13 @@
     </nav>
     <div class="nav-right">
       <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
-      <a href="#" style="font-weight:600">Log in</a>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}
+          <button type="submit" class="lang" style="cursor:pointer;font-family:inherit">Log out</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" style="font-weight:600">Log in</a>
+      {% endif %}
       <a href="{% url 'quiz:start' %}" class="btn btn-primary">See if you qualify</a>
     </div>
     <button class="menu-btn" aria-label="Open menu">☰</button>
@@ -53,7 +59,7 @@
       <div>
         <h5>Account</h5>
         <ul>
-          <li><a href="#">Log in</a></li>
+          <li><a href="{% url 'login' %}">Log in</a></li>
           <li><a href="{% url 'quiz:start' %}">See if you qualify</a></li>
         </ul>
       </div>
