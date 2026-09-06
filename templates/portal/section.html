@@ -1,0 +1,12 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}{{ section.title }} — LexImmigrate{% endblock %}
+
+{% block portal %}
+  <span class="eyebrow">{{ section.eyebrow }}</span>
+  <h1 class="app-h1">{{ section.title }}</h1>
+  <div class="step-card">
+    <p>{{ section.body }}</p>
+    {% if section.note %}<div class="step-note">{{ section.note }}</div>{% endif %}
+  </div>
+{% endblock %}

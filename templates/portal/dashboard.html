@@ -1,0 +1,58 @@
+{% extends "portal/base_portal.html" %}
+
+{% block portal %}
+  <h1 class="app-h1">{{ request.user.first_name }}, welcome to your citizenship journey.</h1>
+  <p class="app-sub">{{ case.package.tier.name }} · {{ case.application_type.name }} · Case #{{ case.pk }}</p>
+
+  <p class="app-lead">Based on where you are, we recommend the following next steps:</p>
+  <div class="next-cards">
+    {% if current_case_step %}
+    <a class="next-card" href="{% url 'portal:step' current_case_step.id %}">
+      <div><span class="nc-label">Continue where you left off</span>
+      <h3>{{ current_case_step.template.title }}</h3></div>
+      <span class="nc-arrow">→</span>
+    </a>
+    {% endif %}
+    <a class="next-card" href="{% url 'portal:section' 'documents' %}">
+      <div><span class="nc-label">Get ahead</span>
+      <h3>Start gathering your documents</h3></div>
+      <span class="nc-arrow">→</span>
+    </a>
+    <a class="next-card" href="{% url 'portal:section' 'appointments' %}">
+      <div><span class="nc-label">Attorney time</span>
+      <h3>Schedule a meeting</h3></div>
+      <span class="nc-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="journey-head">
+    <span class="eyebrow">Your guided journey</span>
+    <div class="portal-progress">
+      <div class="pp-label">{{ done_count }} of {{ total_count }} steps complete</div>
+      <div class="pp-track"><span style="width:{{ pct }}%"></span></div>
+    </div>
+  </div>
+
+  <ol class="journey">
+    {% for step in steps %}
+    <li class="j-step j-{{ step.status }}">
+      <div class="j-marker">
+        {% if step.status == "complete" %}✓{% else %}{{ step.template.order }}{% endif %}
+      </div>
+      <div class="j-body">
+        <h3>{{ step.template.title }}</h3>
+        <p>{{ step.template.description }}</p>
+        {% if step.status == "locked" %}
+          <span class="j-tag">Unlocks after the previous step</span>
+        {% elif step.status == "complete" %}
+          <span class="j-tag done">Completed {{ step.completed_at|date:"M j" }}</span>
+        {% else %}
+          <a href="{% url 'portal:step' step.id %}" class="btn btn-primary btn-sm" style="margin-top:8px">
+            {% if step.template.is_document_gate %}Go to documents{% else %}Open this step{% endif %}
+          </a>
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+{% endblock %}

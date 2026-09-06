@@ -21,15 +21,17 @@
       <a href="{% url 'faq' %}">FAQs</a>
     </nav>
     <div class="nav-right">
-      <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
       {% if user.is_authenticated %}
+        <a href="{% url 'accounts:home' %}" style="font-weight:600">My case</a>
+        <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
         <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}
           <button type="submit" class="lang" style="cursor:pointer;font-family:inherit">Log out</button>
         </form>
       {% else %}
+        <a class="lang" href="#" aria-label="Cambiar a Español">Español</a>
         <a href="{% url 'login' %}" style="font-weight:600">Log in</a>
       {% endif %}
-      <a href="{% url 'quiz:start' %}" class="btn btn-primary">See if you qualify</a>
+      <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-sm">See if you qualify</a>
     </div>
     <button class="menu-btn" aria-label="Open menu">☰</button>
   </div>

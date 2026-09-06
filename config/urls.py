@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
+from catalog import views as catalog_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,10 +28,11 @@ urlpatterns = [
     path("account/login/", auth_views.LoginView.as_view(redirect_authenticated_user=True), name="login"),
     path("account/", include("accounts.urls")),
     path("account/", include("django.contrib.auth.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", catalog_views.home, name="home"),
     path("privacy/", TemplateView.as_view(template_name="legal/privacy.html"), name="legal_privacy"),
     path("terms/", TemplateView.as_view(template_name="legal/terms.html"), name="legal_terms"),
     path("attorney-client-notice/", TemplateView.as_view(template_name="legal/attorney_client_notice.html"), name="legal_notice"),
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
     path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
+    path("portal/", include("portal.urls")),
 ]

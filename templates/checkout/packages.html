@@ -13,11 +13,11 @@
 
     <div class="sec-head">
       <span class="eyebrow">Good news, {{ lead.first_name }}</span>
-      <h2>Choose how much help you want.</h2>
+      <h2>Choose how much lawyer you want.</h2>
       <p>Based on your answers, we've marked the package we recommend — but the choice is yours. All packages are one-time purchases and non-refundable, so choose with confidence.</p>
     </div>
 
-    <div class="tiers">
+    <div class="tiers tiers-4">
       {% for package in packages %}
       <div class="tier{% if package.id == recommended_id %} featured{% endif %}">
         {% if package.id == recommended_id %}<span class="flag">Recommended for you</span>{% endif %}
@@ -25,11 +25,23 @@
         {% if package.tier.tagline %}<div class="who">{{ package.tier.tagline }}</div>{% endif %}
         <div class="price">{{ package.price_display }} <span>one-time</span></div>
         <ul>
-          <li>Step-by-step guided process, official forms &amp; document checklist</li>
-          <li>{{ package.tier.attorney_minutes }} minutes with a licensed immigration attorney</li>
-          {% if package.tier.includes_document_review %}<li>Full application &amp; evidence review before you file</li>{% endif %}
-          {% if package.tier.includes_interview_coaching %}<li>USCIS interview preparation</li>{% endif %}
-          {% if package.tier.includes_representation %}<li>An attorney prepares, files &amp; represents you — including at your USCIS interview</li>{% endif %}
+          <li>Step-by-step naturalization guide, latest official forms &amp; document checklist</li>
+          {% if package.tier.level == 1 %}
+            <li>You prepare and file everything yourself, at your own pace</li>
+          {% endif %}
+          {% if package.tier.includes_document_review %}
+            <li>A licensed immigration attorney reviews your complete application and evidence before you file</li>
+          {% endif %}
+          {% if package.tier.included_meetings %}
+            <li>{{ package.tier.included_meetings }} one-on-one meeting{{ package.tier.included_meetings|pluralize }} with your attorney
+              <small class="fineprint">{{ package.tier.meetings_note }}</small></li>
+          {% endif %}
+          {% if package.tier.includes_interview_coaching and not package.tier.includes_representation %}
+            <li>Full preparation for your USCIS interview, side by side with your attorney</li>
+          {% endif %}
+          {% if package.tier.includes_representation %}
+            <li>Your attorney prepares, files &amp; represents you — including at your USCIS interview</li>
+          {% endif %}
         </ul>
         {% if package.tier.includes_representation %}
           <div class="price-note">Travel expenses for interview attendance not included.</div>

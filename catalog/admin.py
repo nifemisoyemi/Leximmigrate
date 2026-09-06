@@ -14,7 +14,7 @@ class ApplicationTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Tier)
 class TierAdmin(admin.ModelAdmin):
-    list_display = ("name", "level", "attorney_minutes", "includes_document_review",
+    list_display = ("name", "level", "included_meetings", "includes_document_review",
                     "includes_interview_coaching", "includes_representation")
 
 

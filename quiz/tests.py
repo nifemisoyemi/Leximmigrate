@@ -28,9 +28,9 @@ def make_catalog():
     """Minimal catalog the quiz needs: N-400, three tiers, three packages."""
     app = ApplicationType.objects.create(code="N-400", name="Naturalization")
     tiers = {}
-    for level, name, minutes in [(1, "DIY", 60), (2, "Enhanced", 120), (3, "Full Service", 120)]:
-        tiers[level] = Tier.objects.create(level=level, name=name, attorney_minutes=minutes)
-    prices = {1: 142000, 2: 192000, 3: 350000}
+    for level, name, meetings in [(1, "DIY", 0), (2, "Attorney Review", 1), (3, "Enhanced", 2), (4, "Full Service", 0)]:
+        tiers[level] = Tier.objects.create(level=level, name=name, included_meetings=meetings)
+    prices = {1: 62000, 2: 142000, 3: 192000, 4: 352000}
     for level, tier in tiers.items():
         Package.objects.create(application_type=app, tier=tier, price_cents=prices[level])
     return app, tiers
@@ -215,17 +215,17 @@ class RecommendationMatrixTests(QuizTestBase):
         lead = self.finish_and_get_lead({"How much help": "unsure"})
         self.assertEqual(lead.recommended_package.tier.level, Tier.Level.DIY)
 
-    def test_single_flag_escalates_to_enhanced(self):
+    def test_single_flag_escalates_to_review(self):
         lead = self.finish_and_get_lead({"trip outside": "yes"})
+        self.assertEqual(lead.recommended_package.tier.level, Tier.Level.REVIEW)
+
+    def test_moral_character_flag_alone_forces_enhanced(self):
+        lead = self.finish_and_get_lead({"arrested": "yes"})
         self.assertEqual(lead.recommended_package.tier.level, Tier.Level.ENHANCED)
 
-    def test_moral_character_flag_alone_forces_full_service(self):
-        lead = self.finish_and_get_lead({"arrested": "yes"})
-        self.assertEqual(lead.recommended_package.tier.level, Tier.Level.FULL_SERVICE)
-
-    def test_two_ordinary_flags_force_full_service(self):
+    def test_two_ordinary_flags_force_enhanced(self):
         lead = self.finish_and_get_lead({"trip outside": "yes", "income tax": "unsure"})
-        self.assertEqual(lead.recommended_package.tier.level, Tier.Level.FULL_SERVICE)
+        self.assertEqual(lead.recommended_package.tier.level, Tier.Level.ENHANCED)
 
     def test_higher_preference_wins_over_clean_answers(self):
         lead = self.finish_and_get_lead({"How much help": "full"})
@@ -235,6 +235,9 @@ class RecommendationMatrixTests(QuizTestBase):
         lead = self.finish_and_get_lead({"trip outside": "yes", "How much help": "full"})
         self.assertEqual(lead.recommended_package.tier.level, Tier.Level.FULL_SERVICE)
 
+    def test_three_flag_points_force_full_service(self):
+        lead = self.finish_and_get_lead({"arrested": "yes", "trip outside": "yes"})
+        self.assertEqual(lead.recommended_package.tier.level, Tier.Level.FULL_SERVICE)
 
 class GuardTests(QuizTestBase):
     def test_question_page_without_session_redirects_to_start(self):

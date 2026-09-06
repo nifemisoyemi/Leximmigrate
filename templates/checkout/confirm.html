@@ -10,6 +10,10 @@
     <div class="confirm-card">
       <div class="price">{{ package.price_display }} <span>one-time</span></div>
       {% if package.tier.tagline %}<p class="who">{{ package.tier.tagline }}</p>{% endif %}
+      {% if package.tier.included_meetings %}
+        <p class="who">Includes {{ package.tier.included_meetings }} one-on-one meeting{{ package.tier.included_meetings|pluralize }} with your attorney.
+          <small class="fineprint">{{ package.tier.meetings_note }}</small></p>
+      {% endif %}
       {% if error %}<div class="quiz-err">{{ error }}</div>{% endif %}
       <form method="post">
         {% csrf_token %}

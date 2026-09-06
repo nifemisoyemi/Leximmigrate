@@ -17,21 +17,31 @@ class Command(BaseCommand):
     help = "Seed tiers, the N-400 application type, and its workflow steps."
 
     def handle(self, *args, **options):
+        # --- Migrate existing tier levels to the 4-tier structure (order matters:
+        # move Full Service off level 3 before Enhanced moves onto it).
+        Tier.objects.filter(level=3).update(level=4)   # old Full Service -> 4
+        Tier.objects.filter(level=2).update(level=3)   # old Enhanced -> 3
+
         # --- Tiers (shared across every application type) ---
         tiers = {
             Tier.Level.DIY: dict(
-                name="DIY", tagline="You lead the way",
-                attorney_minutes=60, includes_document_review=False,
+                name="DIY", tagline="You run the whole show",
+                included_meetings=0, includes_document_review=False,
+                includes_interview_coaching=False, includes_representation=False,
+            ),
+            Tier.Level.REVIEW: dict(
+                name="Attorney Review", tagline="A licensed attorney checks everything before you file",
+                included_meetings=1, includes_document_review=True,
                 includes_interview_coaching=False, includes_representation=False,
             ),
             Tier.Level.ENHANCED: dict(
-                name="Enhanced", tagline="Attorney review and more time",
-                attorney_minutes=120, includes_document_review=True,
+                name="Enhanced", tagline="Full preparation, side by side with your attorney",
+                included_meetings=2, includes_document_review=True,
                 includes_interview_coaching=True, includes_representation=False,
             ),
             Tier.Level.FULL_SERVICE: dict(
-                name="Full Service", tagline="We file and represent you",
-                attorney_minutes=120, includes_document_review=True,
+                name="Full Service", tagline="Your attorney handles it — and stands with you at your interview",
+                included_meetings=0, includes_document_review=True,
                 includes_interview_coaching=True, includes_representation=True,
             ),
         }
@@ -71,19 +81,22 @@ class Command(BaseCommand):
             )
             self.stdout.write(("Created " if created else "Updated ") + f"step {order}: {title}")
 
-        # --- Packages: N-400 x each tier, at launch prices (decided 11-12:30 meeting).
-        # get_or_create: only sets prices on FIRST creation — re-running never
-        # overwrites prices adjusted in the admin.
+        # --- Packages: N-400 x each tier, 4-package restructure (Aug meeting).
+        # update_or_create ON PURPOSE this time: the restructure must overwrite
+        # the old 3-tier prices. (price, installments_count, installment_amount)
         prices = {
-            Tier.Level.DIY: 142000,           # $1,420
-            Tier.Level.ENHANCED: 192000,      # $1,920
-            Tier.Level.FULL_SERVICE: 350000,  # $3,500
+            Tier.Level.DIY: (62000, None, None),
+            Tier.Level.REVIEW: (142000, 3, 50000),
+            Tier.Level.ENHANCED: (192000, 4, 50000),
+            Tier.Level.FULL_SERVICE: (352000, 5, 76000),
         }
         for level, tier in tier_objs.items():
-            obj, created = Package.objects.get_or_create(
+            price, n, amt = prices[level]
+            obj, created = Package.objects.update_or_create(
                 application_type=n400, tier=tier,
-                defaults=dict(price_cents=prices[level], is_active=True),
+                defaults=dict(price_cents=price, installments_count=n,
+                              installment_amount_cents=amt, is_active=True),
             )
-            self.stdout.write(("Created " if created else "Exists ") + f"package: {n400.code} {tier.name}")
+            self.stdout.write(("Created " if created else "Updated ") + f"package: {n400.code} {tier.name}")
             
         self.stdout.write(self.style.SUCCESS("Catalog seed complete."))

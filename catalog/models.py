@@ -33,8 +33,9 @@ class Tier(models.Model):
 
     class Level(models.IntegerChoices):
         DIY = 1, "DIY"
-        ENHANCED = 2, "Enhanced"
-        FULL_SERVICE = 3, "Full Service"
+        REVIEW = 2, "Attorney Review"
+        ENHANCED = 3, "Enhanced"
+        FULL_SERVICE = 4, "Full Service"
 
     level = models.IntegerField(choices=Level.choices, unique=True)
     name = models.CharField(max_length=100)
@@ -44,7 +45,10 @@ class Tier(models.Model):
     # DIY: 60 min, no review, no representation
     # Enhanced: 120 min, review, interview coaching, no representation
     # Full Service: 120 min, review, representation + firm files on behalf
-    attorney_minutes = models.PositiveIntegerField(default=0)
+    # Attorney interaction is counted in MEETINGS now, not minutes. 0 = none.
+    # Meetings are capped at 1 hour each — shown as fine print at purchase.
+    included_meetings = models.PositiveIntegerField(default=0)
+    meetings_note = models.CharField(max_length=100, blank=True, default="Up to 1 hour per meeting")
     includes_document_review = models.BooleanField(default=False)
     includes_interview_coaching = models.BooleanField(default=False)
     includes_representation = models.BooleanField(default=False)
@@ -69,6 +73,9 @@ class Package(models.Model):
     currency = models.CharField(max_length=3, default="USD")
     stripe_price_id = models.CharField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
+    installments_count = models.PositiveIntegerField(null=True, blank=True)
+    installment_amount_cents = models.PositiveIntegerField(null=True, blank=True)
+
 
     class Meta:
         constraints = [

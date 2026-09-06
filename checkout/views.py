@@ -113,7 +113,7 @@ def help_me(request):
         rec = lead.recommended_package.tier.name if lead.recommended_package else "none"
         push_lead(lead, REASON_PACKAGE_QUESTION, details=f"Recommended: {rec}. Wants help choosing a package.")
         request.session[HELP_SENT_KEY] = True
-        messages.success(request, "Got it — your information has been sent to our team, and someone will reach out within 3-5 business days to help you choose.")
+        messages.success(request, "Got it — your information has been sent to our team, and someone will reach out within 1-3 business days to help you choose.")
     return redirect("checkout:packages")
 
 
@@ -191,11 +191,7 @@ def success(request):
 
 @login_required
 def done(request):
-    """Landing for clients with an active case — the portal grows from here."""
-    case = request.user.cases.select_related("package__tier").order_by("-created_at").first()
-    if not case:
-        return redirect("checkout:packages")
-    return render(request, "checkout/done.html", {"case": case})
+    return redirect("portal:dashboard")
 
 
 # --- webhook (source of truth) ----------------------------------------------

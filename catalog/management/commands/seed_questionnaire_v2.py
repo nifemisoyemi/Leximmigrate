@@ -141,9 +141,10 @@ class Command(BaseCommand):
         add_opt(q10, "I'm not sure", "unsure", 2, flag=True)
 
         add_opt(q11, "I'm confident doing it myself", "diy", 0, tier=Tier.Level.DIY)
-        add_opt(q11, "I'd like an attorney to review everything before I file", "enhanced", 1, tier=Tier.Level.ENHANCED)
-        add_opt(q11, "I want an attorney to handle it and represent me start to finish", "full", 2, tier=Tier.Level.FULL_SERVICE)
-        add_opt(q11, "I'm not sure", "unsure", 3)              # no tier: flags alone decide
+        add_opt(q11, "I'd like an attorney to review everything before I file", "review", 1, tier=Tier.Level.REVIEW)
+        add_opt(q11, "I'd like an attorney to review my work and meet with me to prepare", "enhanced", 2, tier=Tier.Level.ENHANCED)
+        add_opt(q11, "I want an attorney to handle it and represent me start to finish", "full", 3, tier=Tier.Level.FULL_SERVICE)
+        add_opt(q11, "I'm not sure", "unsure", 4)              # no tier: flags alone decide
 
         # ---- Flip active version --------------------------------------------
         Questionnaire.objects.filter(application_type=app, version=1).update(is_active=False)

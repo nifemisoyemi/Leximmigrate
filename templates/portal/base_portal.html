@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}My case — LexImmigrate{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body class="app-body">
+
+<header class="app-topbar">
+  <a class="logo" href="{% url 'portal:dashboard' %}">Lex<b>Immigrate</b></a>
+  <div class="app-topbar-right">
+    <a href="{% url 'portal:section' 'appointments' %}" class="btn btn-ghost btn-sm">Schedule attorney time</a>
+    <span class="app-user">{{ request.user.first_name }}</span>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+      <button type="submit" class="lang" style="cursor:pointer;font-family:inherit">Log out</button>
+    </form>
+  </div>
+</header>
+
+<div class="app-shell">
+  <aside class="app-side">
+    <nav aria-label="Portal">
+      <a class="side-link{% if active == 'case' %} on{% endif %}" href="{% url 'portal:dashboard' %}">Your Case</a>
+      <a class="side-link{% if active == 'documents' %} on{% endif %}" href="{% url 'portal:section' 'documents' %}">Documents</a>
+      <a class="side-link{% if active == 'appointments' %} on{% endif %}" href="{% url 'portal:section' 'appointments' %}">Appointments</a>
+      <a class="side-link{% if active == 'resources' %} on{% endif %}" href="{% url 'portal:section' 'resources' %}">Study Resources</a>
+      <a class="side-link{% if active == 'help' %} on{% endif %}" href="{% url 'portal:section' 'help' %}">Get Help</a>
+    </nav>
+    <div class="side-foot">
+      <a href="{% url 'home' %}">← Back to main site</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    {% block portal %}{% endblock %}
+  </main>
+</div>
+
+</body>
+</html>

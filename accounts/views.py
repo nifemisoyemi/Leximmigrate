@@ -58,7 +58,7 @@ def account_home(request):
     """Post-login router: paid clients -> portal (later); unpaid-but-eligible ->
     resume at packages; everyone else -> home."""
     if request.user.cases.exists():
-        return redirect("checkout:done")   # placeholder; becomes the portal
+        return redirect("portal:dashboard")  
     lead = (
         Lead.objects
         .filter(converted_user=request.user, likely_eligible=True)

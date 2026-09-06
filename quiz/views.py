@@ -202,10 +202,12 @@ def _recommended_package(state):
         return None
     base = state.get("base_level") or Tier.Level.DIY
     flags = state.get("flag_score", 0)
-    if flags >= 2:
+    if flags >= 3:
         escalation = Tier.Level.FULL_SERVICE
-    elif flags == 1:
+    elif flags == 2:
         escalation = Tier.Level.ENHANCED
+    elif flags == 1:
+        escalation = Tier.Level.REVIEW
     else:
         escalation = Tier.Level.DIY
     final_level = max(base, escalation)
