@@ -106,6 +106,10 @@ class WorkflowStepTemplate(models.Model):
     is_document_gate = models.BooleanField(default=False)
     firm_performed_for_full_service = models.BooleanField(default=False)
 
+    # Option B gate: this step stays locked until attorney review passes
+    # (only enforced for tiers with includes_document_review).
+    requires_review_to_unlock = models.BooleanField(default=False)
+
     class Meta:
         ordering = ["application_type", "order"]
         constraints = [

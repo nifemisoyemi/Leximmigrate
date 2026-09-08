@@ -123,7 +123,7 @@ def help_me(request):
 def pay(request):
     """Order summary + the button that starts Stripe Checkout."""
     if request.user.cases.exists():
-        return redirect("checkout:done")            # Phase 1: one case per client
+        return redirect("portal:dashboard")         # Phase 1: one case per client
     state = request.session.get(CHECKOUT_KEY)
     if not state:
         return redirect("checkout:packages")

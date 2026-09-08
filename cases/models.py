@@ -61,6 +61,13 @@ class Case(models.Model):
     filed_with_uscis_at = models.DateTimeField(null=True, blank=True)
     receipt_number = models.CharField(max_length=40, blank=True)   # USCIS receipt (Phase 4)
 
+    # Documents experience: which conditional M-477 groups this client marked
+    # as applying, and when they submitted the set for attorney review.
+    applicable_categories = models.ManyToManyField(
+        "catalog.DocumentCategory", blank=True, related_name="cases_applicable"
+    )
+    documents_submitted_at = models.DateTimeField(null=True, blank=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     last_activity_at = models.DateTimeField(auto_now=True)
 

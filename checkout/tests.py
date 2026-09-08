@@ -152,7 +152,7 @@ class ResumeFlowTests(CheckoutTestBase):
         _fulfill(self.stripe_session_dict(payment))    # make them a paid client
         self.client.force_login(user)
         resp = self.client.get(reverse("accounts:home"))
-        self.assertRedirects(resp, reverse("checkout:done"))
+        self.assertRedirects(resp, reverse("portal:dashboard"))
 
     def test_login_routes_unpaid_eligible_user_to_packages(self):
         user = self.make_user()
@@ -185,7 +185,7 @@ class PayTests(CheckoutTestBase):
         self.client.force_login(user)
         self.set_session(**{CHECKOUT_KEY: {"package_id": self.diy.id, "acknowledged": True}})
         resp = self.client.get(reverse("checkout:pay"))
-        self.assertRedirects(resp, reverse("checkout:done"))
+        self.assertRedirects(resp, reverse("portal:dashboard"))
 
     @patch("checkout.views.stripe.checkout.Session.create")
     def test_post_creates_pending_payment_and_redirects_to_stripe(self, mock_create):

@@ -27,7 +27,7 @@
   <aside class="app-side">
     <nav aria-label="Portal">
       <a class="side-link{% if active == 'case' %} on{% endif %}" href="{% url 'portal:dashboard' %}">Your Case</a>
-      <a class="side-link{% if active == 'documents' %} on{% endif %}" href="{% url 'portal:section' 'documents' %}">Documents</a>
+      <a class="side-link{% if active == 'documents' %} on{% endif %}" href="{% url 'portal:documents' %}">Documents</a>
       <a class="side-link{% if active == 'appointments' %} on{% endif %}" href="{% url 'portal:section' 'appointments' %}">Appointments</a>
       <a class="side-link{% if active == 'resources' %} on{% endif %}" href="{% url 'portal:section' 'resources' %}">Study Resources</a>
       <a class="side-link{% if active == 'help' %} on{% endif %}" href="{% url 'portal:section' 'help' %}">Get Help</a>

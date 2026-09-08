@@ -1,0 +1,79 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}Your documents — LexImmigrate{% endblock %}
+
+{% block portal %}
+  <span class="eyebrow">Documents</span>
+  <h1 class="app-h1">Your document checklist.</h1>
+  <p class="app-sub">Built from the official USCIS checklist — showing only what applies to you.</p>
+
+  {% if messages %}{% for message in messages %}
+    <div class="checkout-banner">{{ message }}</div>
+  {% endfor %}{% endif %}
+
+  {% if frozen %}
+    <div class="doc-frozen">
+      <div>
+        <strong>Submitted for attorney review</strong> on {{ case.documents_submitted_at|date:"M j" }}.
+        Your documents are locked while your attorney reviews them — but your next steps are open, so keep going.
+      </div>
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="withdraw">
+        <button type="submit" class="btn btn-ghost btn-sm">Withdraw &amp; edit</button>
+      </form>
+    </div>
+  {% elif needs_fixes %}
+    <div class="doc-fixes">Your attorney sent some documents back with notes — look for the items marked <strong>Needs revision</strong> below, replace them, and resubmit.</div>
+  {% endif %}
+
+  <div class="doc-progress">
+    <div class="pp-label">{{ with_docs_count }} of {{ applicable_count }} applicable sections have documents</div>
+    <div class="pp-track"><span style="width:{% widthratio with_docs_count applicable_count 100 %}%"></span></div>
+  </div>
+
+  <h2 class="portal-h2">Required for everyone</h2>
+  {% for entry in required %}
+    {% include "portal/_doc_category.html" %}
+  {% endfor %}
+
+  <h2 class="portal-h2" style="margin-top:34px">Does this apply to you?</h2>
+  <p class="app-sub">Check what applies — we've pre-checked what we could tell from your eligibility answers. Checked sections join your checklist below.</p>
+
+  {% if can_edit %}
+  <form method="post" class="doc-toggles">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="toggles">
+    {% for entry in optional %}
+      <label class="doc-toggle">
+        <input type="checkbox" name="applies" value="{{ entry.category.id }}" {% if entry.applies %}checked{% endif %}>
+        <span><strong>{{ entry.category.name }}</strong><br>
+        <small>{{ entry.category.description }}</small></span>
+      </label>
+    {% endfor %}
+    <button type="submit" class="btn btn-ghost btn-sm" style="margin-top:10px">Save what applies to me</button>
+  </form>
+  {% endif %}
+
+  {% for entry in optional %}{% if entry.applies %}
+    {% include "portal/_doc_category.html" %}
+  {% endif %}{% endfor %}
+
+  {% if can_edit %}
+  <div class="doc-submit">
+    {% if ready %}
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="submit">
+        {% if review_tier %}
+          <button type="submit" class="btn btn-primary btn-lg">Submit for attorney review</button>
+          <p class="doc-submit-note">Your attorney will review everything before you file. You'll keep access to your next steps while they do.</p>
+        {% else %}
+          <button type="submit" class="btn btn-primary btn-lg">I've gathered everything on my checklist</button>
+          <p class="doc-submit-note">You're doing this yourself — confirming here unlocks your next step.</p>
+        {% endif %}
+      </form>
+    {% else %}
+      <p class="doc-submit-note">Once every applicable section has at least one document, you'll be able to {% if review_tier %}submit for attorney review{% else %}confirm your checklist{% endif %} here.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endblock %}

@@ -315,3 +315,35 @@ footer a:hover{color:#fff}
   .side-link{white-space:nowrap;margin-bottom:0}
   .side-foot{display:none}
   .app-main{padding:28px 20px 70px}}
+
+/* --- Documents checklist -------------------------------------------------- */
+.doc-progress{margin:18px 0 30px;max-width:420px}
+.doc-frozen{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  background:var(--sky);border:1px solid var(--brand);border-radius:var(--radius);padding:18px 20px;margin-bottom:22px}
+.doc-fixes{background:var(--honey-soft);border:1.5px solid var(--honey-deep);border-radius:var(--radius);
+  padding:16px 18px;margin-bottom:22px}
+.doc-cat{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:14px}
+.doc-cat-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.doc-cat-head h3{font-family:"Public Sans",sans-serif;font-weight:700;font-size:1.05rem}
+.doc-pill{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.25rem .7rem}
+.doc-pill.has{color:var(--grow);border-color:var(--grow)}
+.doc-cat-desc{color:var(--muted);font-size:.92rem;margin:6px 0 12px}
+.doc-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;border-radius:10px;
+  background:var(--paper);margin-bottom:8px;font-size:.94rem}
+.doc-name{font-weight:600;overflow-wrap:anywhere}
+.doc-status{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.doc-row.s-approved .doc-status{color:var(--grow)}
+.doc-row.s-needs_revision{border:1px solid var(--honey-deep)}
+.doc-row.s-needs_revision .doc-status{color:var(--honey-deep)}
+.doc-note{flex-basis:100%;font-size:.88rem;color:var(--ink);font-style:italic}
+.doc-del{background:none;border:0;color:#b4231f;font-size:.85rem;cursor:pointer;font-family:inherit;text-decoration:underline}
+.doc-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.doc-upload input[type=file]{font-size:.9rem}
+.doc-toggles{background:var(--sky);border-radius:var(--radius);padding:18px 20px;margin-bottom:22px}
+.doc-toggle{display:flex;gap:12px;align-items:flex-start;padding:10px 0;cursor:pointer;border-bottom:1px solid rgba(0,0,0,.05)}
+.doc-toggle input{width:19px;height:19px;flex-shrink:0;margin-top:3px;accent-color:var(--brand)}
+.doc-toggle small{color:var(--muted)}
+.doc-submit{margin-top:30px;text-align:center;background:var(--honey-soft);border-radius:var(--radius);padding:26px}
+.doc-submit-note{color:var(--muted);font-size:.9rem;margin-top:10px;max-width:52ch;margin-left:auto;margin-right:auto}

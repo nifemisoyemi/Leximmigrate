@@ -1,0 +1,35 @@
+<div class="doc-cat">
+  <div class="doc-cat-head">
+    <h3>{{ entry.category.name }}</h3>
+    {% if entry.docs %}<span class="doc-pill has">{{ entry.docs|length }} uploaded</span>
+    {% else %}<span class="doc-pill">Nothing yet</span>{% endif %}
+  </div>
+  <p class="doc-cat-desc">{{ entry.category.description }}</p>
+
+  {% for doc in entry.docs %}
+    <div class="doc-row s-{{ doc.status }}">
+      <span class="doc-name">{{ doc.original_filename }}</span>
+      <span class="doc-status">{{ doc.get_status_display }}</span>
+      {% if can_edit and doc.status == "uploaded" or can_edit and doc.status == "needs_revision" %}
+        <form method="post">{% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="document_id" value="{{ doc.id }}">
+          <button type="submit" class="doc-del" aria-label="Remove {{ doc.original_filename }}">Remove</button>
+        </form>
+      {% endif %}
+      {% if doc.status == "needs_revision" and doc.review_note %}
+        <div class="doc-note">Your attorney: “{{ doc.review_note }}”</div>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {% if can_edit %}
+    <form method="post" enctype="multipart/form-data" class="doc-upload">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="upload">
+      <input type="hidden" name="category_id" value="{{ entry.category.id }}">
+      <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
+      <button type="submit" class="btn btn-ghost btn-sm">Upload</button>
+    </form>
+  {% endif %}
+</div>

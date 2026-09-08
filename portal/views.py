@@ -10,15 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-
 from cases.models import Case, CaseStep
+from django.contrib import messages
+from cases import services
+from cases.models import Document, Lead
+from catalog.models import DocumentCategory, Question
 
 SECTIONS = {
-    "documents": {
-        "eyebrow": "Documents", "title": "Your document checklist",
-        "body": "Every document your application needs, in one place — you'll upload each item here and track its review by your attorney.",
-        "note": "This area unlocks in the next phase of the build, once the firm's official N-400 checklist is loaded.",
-    },
     "appointments": {
         "eyebrow": "Appointments", "title": "Schedule attorney time",
         "body": "Book the one-on-one meetings included in your package, right from your portal.",
@@ -96,6 +94,9 @@ def step_detail(request, step_id):
     )
     if step.status == CaseStep.Status.LOCKED:
         return redirect("portal:dashboard")
+    
+    if step.template.is_document_gate:
+        return redirect("portal:documents")
 
     if request.method == "POST" and request.POST.get("action") == "complete":
         _complete_step(case, step)
@@ -130,8 +131,185 @@ def _complete_step(case, step):
         .first()
     )
     if next_step:
-        if next_step.status == CaseStep.Status.LOCKED:
+        blocked = (
+            next_step.template.requires_review_to_unlock
+            and case.package.tier.includes_document_review
+            and case.status != Case.Status.ACTIVE
+        )
+        if next_step.status == CaseStep.Status.LOCKED and not blocked:
             next_step.status = CaseStep.Status.AVAILABLE
             next_step.save(update_fields=["status"])
         case.current_step = next_step.template
         case.save(update_fields=["current_step"])
+
+ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+MAX_UPLOAD_BYTES = 15 * 1024 * 1024   # 15 MB
+
+# Quiz question keyword -> the M-477 category orders that answer implies.
+INFERENCE_RULES = [
+    ("married to", {"yes"}, [3, 4, 5, 6]),
+    ("trip outside", {"yes", "unsure"}, [8]),
+    ("arrested", {"yes"}, [10, 11, 12, 13]),
+    ("income tax", {"no", "unsure"}, [14]),
+    ("basic english", {"no", "unsure"}, [15]),
+]
+
+
+def _infer_applicable(case):
+    """Pre-toggle conditional categories from the client's quiz answers.
+    Runs only on a case's very first visit to the checklist."""
+    lead = (
+        Lead.objects.filter(converted_user=case.client, likely_eligible=True)
+        .order_by("-created_at").first()
+    )
+    if not lead or not lead.answers:
+        return []
+    questions = {str(q.id): q.text.lower() for q in
+                Question.objects.filter(questionnaire=lead.questionnaire)}
+    orders = set()
+    for qid, value in lead.answers.items():
+        text = questions.get(str(qid), "")
+        for keyword, values, category_orders in INFERENCE_RULES:
+            if keyword in text and str(value).lower() in values:
+                orders.update(category_orders)
+    return list(
+        DocumentCategory.objects.filter(
+            application_type=case.application_type, order__in=orders
+        )
+    )
+
+
+@login_required
+def documents(request):
+    case = _client_case(request)
+    if not case:
+        return redirect("accounts:home")
+
+    can_edit = case.status == Case.Status.GATHERING
+    frozen = case.status == Case.Status.PENDING_REVIEW
+
+    all_categories = list(
+        DocumentCategory.objects.filter(application_type=case.application_type)
+        .order_by("order")
+    )
+
+    # First visit: pre-toggle from quiz answers.
+    if (can_edit and not case.applicable_categories.exists()
+            and not case.documents.exists() and case.documents_submitted_at is None):
+        inferred = _infer_applicable(case)
+        if inferred:
+            case.applicable_categories.set(inferred)
+
+    toggled_ids = set(case.applicable_categories.values_list("id", flat=True))
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "toggles" and can_edit:
+            ids = request.POST.getlist("applies")
+            case.applicable_categories.set(
+                DocumentCategory.objects.filter(
+                    application_type=case.application_type, id__in=ids,
+                    is_required=False,
+                )
+            )
+            messages.success(request, "Your checklist has been updated.")
+            return redirect("portal:documents")
+
+        if action == "upload" and can_edit:
+            category = next((c for c in all_categories
+                            if str(c.id) == request.POST.get("category_id")), None)
+            upload = request.FILES.get("file")
+            error = _validate_upload(category, upload, toggled_ids)
+            if error:
+                messages.error(request, error)
+            else:
+                Document.objects.create(
+                    case=case, category=category, file=upload,
+                    original_filename=upload.name,
+                    content_type=upload.content_type or "",
+                    size_bytes=upload.size,
+                )
+                messages.success(request, f"Uploaded to “{category.name}”.")
+            return redirect("portal:documents")
+
+        if action == "delete" and can_edit:
+            case.documents.filter(
+                id=request.POST.get("document_id"),
+                status__in=[Document.Status.UPLOADED, Document.Status.NEEDS_REVISION],
+            ).delete()
+            return redirect("portal:documents")
+
+        if action == "submit":
+            if _checklist_ready(case, all_categories, toggled_ids):
+                if case.package.tier.includes_document_review:
+                    services.submit_for_review(case)
+                    messages.success(request, "Submitted — your attorney will review your documents. You can keep working on your next steps in the meantime.")
+                else:
+                    services.self_certify(case)
+                    messages.success(request, "Checklist complete — your next step is unlocked.")
+            else:
+                messages.error(request, "Every section that applies to you needs at least one document first.")
+            return redirect("portal:documents")
+
+        if action == "withdraw" and frozen:
+            services.withdraw_review(case)
+            messages.success(request, "Submission withdrawn — you can edit your documents again.")
+            return redirect("portal:documents")
+
+        return redirect("portal:documents")
+
+    # ---- build display structure -------------------------------------------
+    docs_by_category = {}
+    for doc in case.documents.select_related("category").order_by("uploaded_at"):
+        docs_by_category.setdefault(doc.category_id, []).append(doc)
+
+    required, optional = [], []
+    for c in all_categories:
+        entry = {
+            "category": c,
+            "docs": docs_by_category.get(c.id, []),
+            "applies": c.is_required or c.id in toggled_ids,
+        }
+        (required if c.is_required else optional).append(entry)
+
+    applicable = [e for e in required + optional if e["applies"]]
+    with_docs = sum(1 for e in applicable if e["docs"])
+    needs_fixes = case.documents.filter(status=Document.Status.NEEDS_REVISION).exists()
+
+    return render(request, "portal/documents.html", {
+        "case": case,
+        "active": "documents",
+        "required": required,
+        "optional": optional,
+        "can_edit": can_edit,
+        "frozen": frozen,
+        "review_tier": case.package.tier.includes_document_review,
+        "applicable_count": len(applicable),
+        "with_docs_count": with_docs,
+        "ready": with_docs == len(applicable) and len(applicable) > 0,
+        "needs_fixes": needs_fixes,
+    })
+
+
+def _validate_upload(category, upload, toggled_ids):
+    if category is None:
+        return "Choose a document section to upload into."
+    if not (category.is_required or category.id in toggled_ids):
+        return "That section isn't marked as applying to you."
+    if upload is None:
+        return "Choose a file to upload."
+    name = upload.name.lower()
+    if not any(name.endswith(ext) for ext in ALLOWED_EXTENSIONS):
+        return "Please upload a PDF, JPG, or PNG file."
+    if upload.size > MAX_UPLOAD_BYTES:
+        return "That file is larger than 15 MB — please compress or rescan it."
+    return ""
+
+
+def _checklist_ready(case, all_categories, toggled_ids):
+    doc_cat_ids = set(case.documents.values_list("category_id", flat=True))
+    for c in all_categories:
+        if (c.is_required or c.id in toggled_ids) and c.id not in doc_cat_ids:
+            return False
+    return any(c.is_required or c.id in toggled_ids for c in all_categories)
