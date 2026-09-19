@@ -110,6 +110,10 @@ class WorkflowStepTemplate(models.Model):
     # (only enforced for tiers with includes_document_review).
     requires_review_to_unlock = models.BooleanField(default=False)
 
+    # Step only exists for tiers that include attorney interaction
+    # (skipped at case creation for pure-DIY tiers).
+    requires_attorney_meeting = models.BooleanField(default=False)
+
     class Meta:
         ordering = ["application_type", "order"]
         constraints = [

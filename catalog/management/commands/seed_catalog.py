@@ -57,23 +57,24 @@ class Command(BaseCommand):
         self.stdout.write(("Created " if created else "Updated ") + f"application type: {n400.code}")
 
         # --- N-400 workflow steps (the 8 steps from the scope) ---
-        # (order, title, description, is_document_gate, firm_performed_for_full_service, requires_review_to_unlock)
+        # (order, title, description, is_document_gate, firm_performed_for_full_service, requires_review_to_unlock, requires_attorney_meeting)
         steps = [
-            (1, "Introduction", "Orientation content explaining the process.", False, False, False),
-            (2, "Gather your documents", "Upload the documents on your checklist for attorney review.", True, False, False),
-            (3, "Confirm eligibility", "A 30-minute appointment with a licensed immigration attorney.", False, False, False),
-            (4, "File your application", "File online (recommended) or by mail. Full Service: the firm files for you.", False, True, True),
-            (5, "Check your application status", "Track your case status with USCIS.", False, False, False),
-            (6, "Complete application requirements", "Fingerprinting and biometrics instructions.", False, False, False),
-            (7, "Prepare for your USCIS interview", "Study resources for the civics and English test.", False, False, False),
-            (8, "Decision", "Oath ceremony guidance if approved; appeal or reapply information if denied.", False, False, False),
+            (1, "Introduction", "Orientation content explaining the process.", False, False, False, False),
+            (2, "Gather your documents", "Upload the documents on your checklist for attorney review.", True, False, False, False),
+            (3, "Confirm eligibility", "Schedule a meeting with your attorney to confirm your eligibility before you move forward.", False, False, False, True),
+            (4, "File your application", "File online (recommended) or by mail. Full Service: the firm files for you.", False, True, True, False),
+            (5, "Check your application status", "Track your case status with USCIS.", False, False, False, False),
+            (6, "Complete application requirements", "Fingerprinting and biometrics instructions.", False, False, False, False),
+            (7, "Prepare for your USCIS interview", "Study resources for the civics and English test.", False, False, False, False),
+            (8, "Decision", "Oath ceremony guidance if approved; appeal or reapply information if denied.", False, False, False, False),
         ]
-        for order, title, desc, gate, firm, review_gate in steps:
+        for order, title, desc, gate, firm, review_gate, needs_meeting in steps:
             obj, created = WorkflowStepTemplate.objects.update_or_create(
                 application_type=n400, order=order,
                 defaults=dict(title=title, description=desc,
                               is_document_gate=gate, firm_performed_for_full_service=firm,
-                              requires_review_to_unlock=review_gate),
+                              requires_review_to_unlock=review_gate,
+                              requires_attorney_meeting=needs_meeting),
             )
             self.stdout.write(("Created " if created else "Updated ") + f"step {order}: {title}")
 

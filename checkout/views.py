@@ -230,11 +230,13 @@ def _fulfill(session):
         return
 
     with transaction.atomic():
-        step_templates = list(
-            WorkflowStepTemplate.objects
-            .filter(application_type=payment.package.application_type)
-            .order_by("order")
-        )
+        tier = payment.package.tier
+        step_templates = WorkflowStepTemplate.objects.filter(
+            application_type=payment.package.application_type
+        ).order_by("order")
+        if tier.included_meetings == 0 and not tier.includes_representation:
+            step_templates = step_templates.filter(requires_attorney_meeting=False)
+        step_templates = list(step_templates)
         case = Case.objects.create(
             client=payment.user,
             package=payment.package,
