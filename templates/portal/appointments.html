@@ -1,0 +1,34 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}Appointments — LexImmigrate{% endblock %}
+
+{% block portal %}
+  <span class="eyebrow">Appointments</span>
+  <h1 class="app-h1">Schedule attorney time.</h1>
+
+  {% if can_book %}
+    <p class="app-sub">
+      {{ case.package.tier.included_meetings|default:"Your" }} meeting{{ case.package.tier.included_meetings|pluralize }}
+      with {{ case.package.tier.meetings_note|default:"your attorney" }} — pick whatever time works best for you below.
+      {% if case.package.tier.meetings_note %}<small>{{ case.package.tier.meetings_note }}</small>{% endif %}
+    </p>
+
+    <div class="acuity-wrap">
+      <iframe
+        src="https://app.acuityscheduling.com/schedule.php?owner={{ acuity_owner_id }}&ref=leximmigrate_portal"
+        title="Schedule an appointment with your attorney"
+        width="100%" height="800" frameborder="0" allow="payment">
+      </iframe>
+    </div>
+    <script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
+
+    <p class="app-sub" style="margin-top:18px">
+      After booking, you'll get a confirmation email directly from our scheduling system.
+    </p>
+  {% else %}
+    <div class="step-card">
+      <p>Your DIY package doesn't include attorney meetings — you're set up to handle your application on your own, with our step-by-step guidance.</p>
+      <p style="margin-top:10px">If you'd like to add attorney time to your case, reach out through <a href="{% url 'portal:help' %}">Get Help</a>.</p>
+    </div>
+  {% endif %}
+{% endblock %}

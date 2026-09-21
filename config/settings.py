@@ -28,6 +28,20 @@ MONDAY_BOARD_ID = env("MONDAY_BOARD_ID", default="")
 STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+ACUITY_OWNER_ID = env("ACUITY_OWNER_ID", default="40327942")
+# --- Email (Postmark via django-anymail) ------------------------------------
+POSTMARK_SERVER_TOKEN = env("POSTMARK_SERVER_TOKEN", default="")
+ 
+if POSTMARK_SERVER_TOKEN:
+    EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
+    ANYMAIL = {"POSTMARK_SERVER_TOKEN": POSTMARK_SERVER_TOKEN}
+else:
+    # No token configured (e.g. fresh clone before Postmark is set up) —
+    # fall back to the console backend so the app still runs; emails just
+    # print to the terminal instead of sending.
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ 
+DEFAULT_FROM_EMAIL = "LexImmigrate <notifications@leximmigrate.com>"
 
 # --- Applications --------------------------------------------------------
 INSTALLED_APPS = [
@@ -44,6 +58,7 @@ INSTALLED_APPS = [
     "quiz",
     "checkout",
     "portal",
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -116,6 +131,5 @@ LOGIN_REDIRECT_URL = "accounts:home"
 LOGOUT_REDIRECT_URL = "/"
 
 # --- Email config --------------------------------------------------------
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "LexImmigrate <noreply@leximmigrate.com>"
 FIRM_NOTIFICATION_EMAIL = "leads@leximmigrate.test"

@@ -67,7 +67,9 @@ class DocumentAdmin(admin.ModelAdmin):
         from django.utils import timezone
         queryset.update(status=Document.Status.NEEDS_REVISION,
                         reviewed_by=request.user, reviewed_at=timezone.now())
-
+        from cases.notifications import send_needs_revision
+        for doc in queryset:
+            send_needs_revision(doc)
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):

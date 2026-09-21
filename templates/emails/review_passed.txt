@@ -1,0 +1,6 @@
+Hi {{ user.first_name }},
+
+Good news — your documents have been reviewed and approved. Your next step
+is now unlocked in your portal.
+
+— The LexImmigrate team

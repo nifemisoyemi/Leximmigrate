@@ -114,6 +114,13 @@ class WorkflowStepTemplate(models.Model):
     # (skipped at case creation for pure-DIY tiers).
     requires_attorney_meeting = models.BooleanField(default=False)
 
+    body = models.TextField(
+        blank=True,
+        help_text="Long-form guidance for the step detail page. Supports "
+                   "Django template tags referencing `case` (e.g. "
+                   "{% if case.package.tier.includes_representation %}).",
+    )
+
     class Meta:
         ordering = ["application_type", "order"]
         constraints = [
@@ -204,3 +211,29 @@ class QuestionOption(models.Model):
 
     def __str__(self):
         return self.label
+
+
+# ============================================================================
+# ADD to catalog/models.py — a new small model, ResourceCard, placed anywhere
+# after WorkflowStepTemplate is defined (order in the file doesn't matter for
+# FKs, but keeping it near WorkflowStepTemplate is tidiest).
+# ============================================================================
+
+class ResourceCard(models.Model):
+    """
+    An external link card shown on a step-detail page (e.g. 'Check your case
+    status' -> egov.uscis.gov). Kept as data so links can be fixed without a
+    deploy if USCIS reshuffles a URL.
+    """
+    step = models.ForeignKey(
+        WorkflowStepTemplate, on_delete=models.CASCADE, related_name="resource_cards"
+    )
+    order = models.PositiveIntegerField(default=0)
+    label = models.CharField(max_length=200)   # "Check your case status"
+    url = models.URLField()
+
+    class Meta:
+        ordering = ["step", "order"]
+
+    def __str__(self):
+        return f"{self.step} -> {self.label}"

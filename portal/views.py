@@ -10,30 +10,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from cases.models import Case, CaseStep
+from django.template import Context, Template
 from django.contrib import messages
+from django.conf import settings
 from cases import services
-from cases.models import Document, Lead
+from cases.models import Case, CaseStep, Document, Lead
+from cases.monday import REASON_PACKAGE_QUESTION, push_lead
 from catalog.models import DocumentCategory, Question
 
 SECTIONS = {
-    "appointments": {
-        "eyebrow": "Appointments", "title": "Schedule attorney time",
-        "body": "Book the one-on-one meetings included in your package, right from your portal.",
-        "note": "Online scheduling is being connected now — until then, the firm will reach out to arrange your meetings.",
-    },
-    "resources": {
-        "eyebrow": "Study resources", "title": "Prepare for your tests",
-        "body": "Civics test questions, English practice, and interview preparation materials for your package.",
-        "note": "Study materials are being loaded for Enhanced and Full Service packages.",
-    },
-    "help": {
-        "eyebrow": "Get help", "title": "We're here for you",
-        "body": "Questions about your case, your package, or the process — reach out and a member of the team will get back to you within 1–3 business days.",
-        "note": "A direct contact option is coming here. For now, use the phone number on your receipt or the main site.",
-    },
+    
 }
-
+## view functions: resources, help_center
+## near any the other portal views
 
 def _client_case(request):
     return (
@@ -88,28 +77,38 @@ def step_detail(request, step_id):
     case = _client_case(request)
     if not case:
         return redirect("accounts:home")
-
+ 
     step = get_object_or_404(
         CaseStep.objects.select_related("template"), id=step_id, case=case,
     )
     if step.status == CaseStep.Status.LOCKED:
         return redirect("portal:dashboard")
-    
     if step.template.is_document_gate:
         return redirect("portal:documents")
-
+ 
     if request.method == "POST" and request.POST.get("action") == "complete":
         _complete_step(case, step)
         return redirect("portal:dashboard")
+    
+    if request.method == "POST" and request.POST.get("action") == "uncomplete":
+        _uncomplete_step(case, step)
+        return redirect("portal:step", step_id=step.id)
 
+    body_source = step.template.body.replace(
+        "{{ meetings_note }}", case.package.tier.meetings_note or ""
+    )
+    rendered_body = Template(body_source).render(Context({"case": case}))
+ 
     return render(request, "portal/step_detail.html", {
         "case": case,
         "step": step,
         "active": "case",
+        "rendered_body": rendered_body,
         "can_self_complete": (
             step.status in (CaseStep.Status.AVAILABLE, CaseStep.Status.IN_PROGRESS)
             and not step.template.is_document_gate
         ),
+        "can_uncomplete": step.status == CaseStep.Status.COMPLETE and not step.template.is_document_gate,
     })
 
 
@@ -141,6 +140,13 @@ def _complete_step(case, step):
             next_step.save(update_fields=["status"])
         case.current_step = next_step.template
         case.save(update_fields=["current_step"])
+
+def _uncomplete_step(case, step):
+    if step.status != CaseStep.Status.COMPLETE:
+        return
+    step.status = CaseStep.Status.AVAILABLE
+    step.completed_at = None
+    step.save(update_fields=["status", "completed_at"])
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024   # 15 MB
@@ -313,3 +319,56 @@ def _checklist_ready(case, all_categories, toggled_ids):
         if (c.is_required or c.id in toggled_ids) and c.id not in doc_cat_ids:
             return False
     return any(c.is_required or c.id in toggled_ids for c in all_categories)
+
+@login_required
+def appointments(request):
+    case = _client_case(request)
+    if not case:
+        return redirect("accounts:home")
+ 
+    tier = case.package.tier
+    can_book = tier.included_meetings > 0 or tier.includes_representation
+ 
+    return render(request, "portal/appointments.html", {
+        "case": case,
+        "active": "appointments",
+        "can_book": can_book,
+        "acuity_owner_id": settings.ACUITY_OWNER_ID,
+    })
+
+@login_required
+def resources(request):
+    case = _client_case(request)
+    if not case:
+        return redirect("accounts:home")
+ 
+    has_access = case.package.tier.includes_interview_coaching
+ 
+    return render(request, "portal/resources.html", {
+        "case": case,
+        "active": "resources",
+        "has_access": has_access,
+    })
+
+@login_required
+def help_center(request):
+    case = _client_case(request)
+    if not case:
+        return redirect("accounts:home")
+ 
+    if request.method == "POST":
+        message = request.POST.get("message", "").strip()
+        if message:
+            lead = Lead.objects.filter(converted_user=request.user).order_by("-created_at").first()
+            details = f"Portal help request (Case #{case.pk}, {case.package.tier.name}): {message[:1500]}"
+            if lead:
+                push_lead(lead, REASON_PACKAGE_QUESTION, details=details)
+            from cases.notifications import send_help_request_received
+            send_help_request_received(request.user, message)
+            messages.success(request, "Your message has been sent — someone will get back to you within 1–3 business days.")
+        return redirect("portal:help")
+ 
+    return render(request, "portal/help.html", {
+        "case": case,
+        "active": "help",
+    })

@@ -1,0 +1,10 @@
+Hi {{ user.first_name }},
+
+Your attorney reviewed "{{ document.category.name }}" and it needs a small
+update before we can move forward:
+
+"{{ document.review_note }}"
+
+Log in to your portal, replace the document, and resubmit when you're ready.
+
+— The LexImmigrate team

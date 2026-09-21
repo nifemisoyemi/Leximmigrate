@@ -1,0 +1,6 @@
+Hi {{ user.first_name }},
+
+Your LexImmigrate case is ready. Log in to your portal to see your
+personalized checklist and get started on your first step.
+
+— The LexImmigrate team

@@ -1,0 +1,47 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}Study Resources — LexImmigrate{% endblock %}
+
+{% block portal %}
+  <span class="eyebrow">Study resources</span>
+  <h1 class="app-h1">Prepare for your English and civics test.</h1>
+
+  {% if has_access %}
+    <p class="app-sub">Official USCIS study materials for the 2025 civics test — the version used for everyone filing now.</p>
+
+    <div class="resource-cards" style="margin-top:22px">
+      <a class="resource-card" href="https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf" target="_blank" rel="noopener">
+        128 civics questions &amp; answers (2025 test) <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.uscis.gov/sites/default/files/document/brochures/USCIS-2025-Civics-Test-Study-Guide.pdf" target="_blank" rel="noopener">
+        Official USCIS civics study guide <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.uscis.gov/sites/default/files/document/flash-cards/M-623_red.pdf" target="_blank" rel="noopener">
+        Civics flash cards (printable PDF) <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test/100-civics-questions-and-answers-with-mp3-audio-english-version" target="_blank" rel="noopener">
+        100 civics questions with audio <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.uscis.gov/link/49670" target="_blank" rel="noopener">
+        Civics practice test <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.uscis.gov/citizenship/learn-about-citizenship/the-naturalization-interview-and-test" target="_blank" rel="noopener">
+        What happens at the interview <span class="rc-arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="step-note" style="margin-top:26px">
+      Your package includes interview preparation with your attorney — you'll go over this material together before your interview, on top of studying on your own.
+    </div>
+  {% else %}
+    <div class="step-card">
+      <p>Study materials are included with the Enhanced and Full Service packages, alongside interview preparation with your attorney.</p>
+      <p style="margin-top:10px">You're welcome to study independently using USCIS's free public materials any time:</p>
+      <div class="resource-cards" style="margin-top:14px">
+        <a class="resource-card" href="https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf" target="_blank" rel="noopener">
+          2025 civics test — official USCIS materials <span class="rc-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

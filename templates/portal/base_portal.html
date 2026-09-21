@@ -15,8 +15,7 @@
 <header class="app-topbar">
   <a class="logo" href="{% url 'portal:dashboard' %}">Lex<b>Immigrate</b></a>
   <div class="app-topbar-right">
-    <a href="{% url 'portal:section' 'appointments' %}" class="btn btn-ghost btn-sm">Schedule attorney time</a>
-    <span class="app-user">{{ request.user.first_name }}</span>
+    <a href="{% url 'portal:appointments' %}" class="btn btn-ghost btn-sm">Schedule attorney time</a>
     <form method="post" action="{% url 'logout' %}">{% csrf_token %}
       <button type="submit" class="lang" style="cursor:pointer;font-family:inherit">Log out</button>
     </form>
@@ -28,9 +27,9 @@
     <nav aria-label="Portal">
       <a class="side-link{% if active == 'case' %} on{% endif %}" href="{% url 'portal:dashboard' %}">Your Case</a>
       <a class="side-link{% if active == 'documents' %} on{% endif %}" href="{% url 'portal:documents' %}">Documents</a>
-      <a class="side-link{% if active == 'appointments' %} on{% endif %}" href="{% url 'portal:section' 'appointments' %}">Appointments</a>
-      <a class="side-link{% if active == 'resources' %} on{% endif %}" href="{% url 'portal:section' 'resources' %}">Study Resources</a>
-      <a class="side-link{% if active == 'help' %} on{% endif %}" href="{% url 'portal:section' 'help' %}">Get Help</a>
+      <a class="side-link{% if active == 'appointments' %} on{% endif %}" href="{% url 'portal:appointments' %}">Appointments</a>
+      <a class="side-link{% if active == 'resources' %} on{% endif %}" href="{% url 'portal:resources' %}">Study Resources</a>
+      <a class="side-link{% if active == 'help' %} on{% endif %}" href="{% url 'portal:help' %}">Get Help</a>
     </nav>
     <div class="side-foot">
       <a href="{% url 'home' %}">← Back to main site</a>

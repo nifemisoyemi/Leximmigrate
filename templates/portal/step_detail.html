@@ -8,17 +8,11 @@
   <h1 class="app-h1">{{ step.template.title }}</h1>
 
   <div class="step-card">
-    <p>{{ step.template.description }}</p>
+    <div class="step-body">{{ rendered_body|linebreaks }}</div>
 
     {% if step.template.is_document_gate %}
       <div class="step-note">
-        Your document checklist and uploads will live here — you'll add each required
-        document and track its review by your attorney. Coming in the next phase of the build.
-      </div>
-    {% elif step.template.firm_performed_for_full_service and case.package.tier.includes_representation %}
-      <div class="step-note">
-        Good news — this step is handled for you. Your attorney performs this on
-        your behalf, and you'll see updates here.
+        Your document checklist lives on the <a href="{% url 'portal:documents' %}">Documents</a> page — head there to get started.
       </div>
     {% endif %}
 
@@ -28,6 +22,23 @@
       <input type="hidden" name="action" value="complete">
       <button type="submit" class="btn btn-primary btn-lg">Mark this step complete</button>
     </form>
+    {% elif can_uncomplete %}
+    <form method="post" style="margin-top:22px">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="uncomplete">
+      <button type="submit" class="btn btn-ghost">Mark as not complete</button>
+    </form>
     {% endif %}
   </div>
+
+  {% if step.template.resource_cards.all %}
+    <h2 class="portal-h2" style="margin-top:30px">Helpful links</h2>
+    <div class="resource-cards">
+      {% for card in step.template.resource_cards.all %}
+        <a class="resource-card" href="{{ card.url }}" target="_blank" rel="noopener">
+          {{ card.label }} <span class="rc-arrow">↗</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endblock %}

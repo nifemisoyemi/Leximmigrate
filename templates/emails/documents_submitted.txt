@@ -1,0 +1,10 @@
+Hi {{ user.first_name }},
+
+We've received your documents for {{ case.package.tier.name }} review.
+A licensed attorney will look over everything before you file — you don't
+need to do anything else right now, and you can keep working on your other
+steps in the meantime.
+
+We'll let you know as soon as the review is complete.
+
+— The LexImmigrate team

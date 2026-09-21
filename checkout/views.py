@@ -256,3 +256,7 @@ def _fulfill(session):
         payment.stripe_payment_intent_id = session["payment_intent"] or ""
         payment.case = case
         payment.save()
+
+        from cases.notifications import send_receipt, send_case_started
+        send_receipt(payment)
+        send_case_started(case)

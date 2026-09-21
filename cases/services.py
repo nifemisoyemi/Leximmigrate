@@ -14,9 +14,8 @@ template flagged requires_review_to_unlock stays locked until `active`.
 """
 
 from django.utils import timezone
-
 from .models import Case, CaseStep, Document
-
+from cases.notifications import send_documents_submitted, send_review_passed
 
 def _step(case, *, gate=False, order=None):
     qs = case.steps.select_related("template")
@@ -62,6 +61,7 @@ def submit_for_review(case):
         gate.status = CaseStep.Status.IN_PROGRESS
         gate.save(update_fields=["status"])
         _unlock_next_after(case, gate)
+    send_documents_submitted(case)
 
 
 def withdraw_review(case):
@@ -121,6 +121,7 @@ def pass_review(case, reviewer=None):
                 s.status = CaseStep.Status.AVAILABLE
                 s.save(update_fields=["status"])
             break
+    send_review_passed(case)
 
 
 def return_for_changes(case):
