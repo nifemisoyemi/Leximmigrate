@@ -15,12 +15,20 @@
         Your document checklist lives on the <a href="{% url 'portal:documents' %}">Documents</a> page — head there to get started.
       </div>
     {% endif %}
+    
+    {% if step.template.requires_attorney_meeting %}
+      <div class="step-note">
+        Book your meeting on the <a href="{% url 'portal:appointments' %}">Appointments</a> page, then confirm below.
+      </div>
+    {% endif %}
 
     {% if can_self_complete %}
     <form method="post" style="margin-top:22px">
       {% csrf_token %}
       <input type="hidden" name="action" value="complete">
-      <button type="submit" class="btn btn-primary btn-lg">Mark this step complete</button>
+      <button type="submit" class="btn btn-primary btn-lg">
+        {% if step.template.requires_attorney_meeting %}I've booked my meeting with my attorney{% else %}Mark this step complete{% endif %}
+      </button>
     </form>
     {% elif can_uncomplete %}
     <form method="post" style="margin-top:22px">
@@ -28,6 +36,9 @@
       <input type="hidden" name="action" value="uncomplete">
       <button type="submit" class="btn btn-ghost">Mark as not complete</button>
     </form>
+    {% endif %}
+    {% if next_step %}
+      <a href="{% url 'portal:step' next_step.id %}" class="btn btn-ghost" style="margin-top:14px">Next: {{ next_step.template.title }} →</a>
     {% endif %}
   </div>
 

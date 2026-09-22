@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.template import Context, Template
 from django.contrib import messages
 from django.conf import settings
+from django.urls import reverse
 from cases import services
 from cases.models import Case, CaseStep, Document, Lead
 from cases.monday import REASON_PACKAGE_QUESTION, push_lead
@@ -86,9 +87,16 @@ def step_detail(request, step_id):
     if step.template.is_document_gate:
         return redirect("portal:documents")
  
+    def _next_open_step():
+        nxt = (case.steps.select_related("template")
+               .filter(template__order__gt=step.template.order)
+               .order_by("template__order").first())
+        return nxt if nxt and nxt.status != CaseStep.Status.LOCKED else None
+
     if request.method == "POST" and request.POST.get("action") == "complete":
         _complete_step(case, step)
-        return redirect("portal:dashboard")
+        nxt = _next_open_step()
+        return redirect("portal:step", step_id=nxt.id) if nxt else redirect("portal:dashboard")
     
     if request.method == "POST" and request.POST.get("action") == "uncomplete":
         _uncomplete_step(case, step)
@@ -109,6 +117,7 @@ def step_detail(request, step_id):
             and not step.template.is_document_gate
         ),
         "can_uncomplete": step.status == CaseStep.Status.COMPLETE and not step.template.is_document_gate,
+        "next_step": _next_open_step(),
     })
 
 
@@ -237,7 +246,8 @@ def documents(request):
                     size_bytes=upload.size,
                 )
                 messages.success(request, f"Uploaded to “{category.name}”.")
-            return redirect("portal:documents")
+            cat_id = request.POST.get("category_id", "")
+            return redirect(f"{reverse('portal:documents')}#cat-{cat_id}")
 
         if action == "delete" and can_edit:
             case.documents.filter(

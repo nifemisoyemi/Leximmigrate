@@ -13,7 +13,10 @@
 <body class="app-body">
 
 <header class="app-topbar">
-  <a class="logo" href="{% url 'portal:dashboard' %}">Lex<b>Immigrate</b></a>
+  <div style="display:flex;align-items:center">
+    <button class="side-toggle" id="sideToggle" aria-label="Show or hide menu">☰</button>
+    <a class="logo" href="{% url 'portal:dashboard' %}">Lex<b>Immigrate</b></a>
+  </div>
   <div class="app-topbar-right">
     <a href="{% url 'portal:appointments' %}" class="btn btn-ghost btn-sm">Schedule attorney time</a>
     <form method="post" action="{% url 'logout' %}">{% csrf_token %}
@@ -40,6 +43,18 @@
     {% block portal %}{% endblock %}
   </main>
 </div>
+
+<script>
+  (function () {
+    var shell = document.querySelector('.app-shell');
+    var key = 'lex-side-collapsed';
+    if (localStorage.getItem(key) === '1') shell.classList.add('collapsed');
+    document.getElementById('sideToggle').addEventListener('click', function () {
+      shell.classList.toggle('collapsed');
+      localStorage.setItem(key, shell.classList.contains('collapsed') ? '1' : '0');
+    });
+  })();
+</script>
 
 </body>
 </html>

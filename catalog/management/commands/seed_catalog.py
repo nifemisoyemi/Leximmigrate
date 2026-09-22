@@ -87,7 +87,8 @@ class Command(BaseCommand):
              "You won't see a step here until it's actually time for it. Whatever "
              "your package includes, this portal will always show you exactly "
              "where you stand.",
-             [("See how long this usually takes", "https://egov.uscis.gov/processing-times/")]),
+             [("See how long this usually takes", "https://egov.uscis.gov/processing-times/"),
+              ("USCIS's official eligibility tool (full detail)", "https://www.uscis.gov/citizenship-resource-center/learn-about-citizenship/naturalization-eligibility-tool")]),
  
             (2, "Gather your documents",
              "Your checklist — built just for you, not the government's one-size-fits-all list.",

@@ -184,13 +184,13 @@ footer a:hover{color:#fff}
 .faq-item[open] summary{border-bottom:1px solid var(--line)}
 .faq-item p{padding:16px 20px;margin:0;color:#334553}
 .faq-item summary:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}
-.faq-cta{margin-top:3rem;text-align:center;background:var(--honey-soft);
-  border-radius:var(--radius);padding:36px 24px}
+.faq-cta{margin-top:3rem;text-align:center;padding:36px 0 0;border-top:1px solid var(--line)}
+.legal .faq-cta a.btn{text-decoration:none}
 .faq-cta p{font-family:"Fraunces",serif;font-size:1.3rem;margin-bottom:1rem;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.faq-item summary::after{transition:none}}
 
 /* --- Checkout ------------------------------------------------------------ */
-.checkout-banner{background:var(--honey-soft);border:1.5px solid var(--honey);border-radius:12px;
+.checkout-banner{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
   padding:14px 18px;font-weight:600;margin-bottom:28px}
 .help-strip{margin-top:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;
   flex-wrap:wrap;background:var(--sky);border-radius:var(--radius);padding:22px 26px}
@@ -345,7 +345,7 @@ footer a:hover{color:#fff}
 .doc-toggle{display:flex;gap:12px;align-items:flex-start;padding:10px 0;cursor:pointer;border-bottom:1px solid rgba(0,0,0,.05)}
 .doc-toggle input{width:19px;height:19px;flex-shrink:0;margin-top:3px;accent-color:var(--brand)}
 .doc-toggle small{color:var(--muted)}
-.doc-submit{margin-top:30px;text-align:center;background:var(--honey-soft);border-radius:var(--radius);padding:26px}
+.doc-submit{margin-top:30px;text-align:center;padding:26px 0 0;border-top:1px solid var(--line)}
 .doc-submit-note{color:var(--muted);font-size:.9rem;margin-top:10px;max-width:52ch;margin-left:auto;margin-right:auto}
 
 /* --- Step body + resource cards -------------------------------------------- */
@@ -364,3 +364,15 @@ footer a:hover{color:#fff}
 .acuity-wrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;
   box-shadow:0 18px 40px -28px rgba(18,40,59,.4)}
 .acuity-wrap iframe{display:block}
+
+/* --- Quick-fix batch ------------------------------------------------------ */
+.side-toggle{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;
+  cursor:pointer;font-size:1.1rem;color:var(--ink);margin-right:12px}
+.app-shell.collapsed{grid-template-columns:1fr}
+.app-shell.collapsed .app-side{display:none}
+.doc-cat{scroll-margin-top:90px}
+.nav{position:relative}
+@media (max-width:900px){
+  .nav.open .nav-links{display:flex;flex-direction:column;position:absolute;top:74px;left:0;right:0;
+    background:var(--paper);padding:18px 24px;border-bottom:1px solid var(--line);gap:1rem;z-index:60}
+}
