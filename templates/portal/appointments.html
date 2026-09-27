@@ -8,8 +8,8 @@
 
   {% if can_book %}
     <p class="app-sub">
-      {{ case.package.tier.included_meetings|default:"Your" }} meeting{{ case.package.tier.included_meetings|pluralize }}
-      with {{ case.package.tier.meetings_note|default:"your attorney" }} — pick whatever time works best for you below.
+      Pick a time with your attorney below.
+      {% if case.package.tier.included_meetings %}Your package includes {{ case.package.tier.included_meetings }} meeting{{ case.package.tier.included_meetings|pluralize }}.{% endif %}
       {% if case.package.tier.meetings_note %}<small>{{ case.package.tier.meetings_note }}</small>{% endif %}
     </p>
 

@@ -11,7 +11,7 @@
       <h1>You decide how much <em>lawyering</em> you need.</h1>
       <p class="lead">Becoming a U.S. citizen is a big step. We guide you through it clearly — and you choose how much attorney help you want, from doing it yourself to full representation.</p>
       <div class="hero-cta">
-        <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-lg">See if you qualify — it's free</a>
+        <a href="{% url 'quiz:start' %}" class="btn btn-primary btn-lg">Start here — it's free</a>
         <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
       </div>
       <div class="microtrust"><span class="dot"></span> A few questions, about 2 minutes. No account or payment needed to start.</div>
@@ -87,7 +87,7 @@
         {% if package.tier.includes_representation %}
           <div class="price-note">Travel expenses for interview attendance not included.</div>
         {% endif %}
-        <a href="{% url 'quiz:start' %}" class="btn {% if package.tier.level == 3 %}btn-primary{% else %}btn-ghost{% endif %}">See if you qualify</a>
+        <a href="{% url 'quiz:start' %}" class="btn {% if package.tier.level == 3 %}btn-primary{% else %}btn-ghost{% endif %}">Start here</a>
       </div>
       {% endfor %}
     </div>

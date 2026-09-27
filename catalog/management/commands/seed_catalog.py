@@ -146,7 +146,8 @@ class Command(BaseCommand):
              "One more thing: the government's filing fee is paid <strong>directly to "
              "USCIS</strong>, separately from what you paid LexImmigrate. Check the "
              "current amount before you file, since it changes from time to time.",
-             [("Set up your free USCIS account", "https://myaccount.uscis.gov/"),
+             [("Form N-400 — official form & instructions (PDF)", "https://www.uscis.gov/n-400"),
+              ("File online with a free USCIS account", "https://myaccount.uscis.gov/"),
               ("Check the current filing fee", "https://www.uscis.gov/forms/filing-fees")]),
  
             (5, "Check your application status",
