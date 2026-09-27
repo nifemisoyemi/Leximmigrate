@@ -8,12 +8,12 @@ django-environ>=0.11      # read settings/secrets from environment (.env)
 requests>=2.32            # Monday.com lead sync (cases/monday.py)
 stripe>=12                # payments — Stage 3 of checkout flow
 gunicorn>=23              # production WSGI server
-whitenoise>=6
+whitenoise>=6             # serves static files in production
+django-anymail>=12        # Postmark transactional email
 
 # --- Added later, per feature (leave commented until we get there) ---
 # django-two-factor-auth   # TOTP 2FA (deferred)
 # django-storages[boto3]   # DigitalOcean Spaces (Milestone 2)
-# django-anymail[postmark] # transactional email (Milestone 2)
 # django-rq  redis         # background jobs / virus scanning (Milestone 2)
 # django-auditlog          # audit logging (Milestone 3)
 # sentry-sdk               # error monitoring (Milestone 3)

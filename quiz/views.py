@@ -35,8 +35,9 @@ def _fresh_state():
     }
 
 def start(request):
-    """Informational landing before the quiz. The actual reset lives in begin()."""
-    return render(request, "quiz/intro.html")
+    lead_id = request.session.get(LEAD_KEY)
+    has_result = bool(lead_id) and Lead.objects.filter(id=lead_id, likely_eligible=True).exists()
+    return render(request, "quiz/intro.html", {"has_result": has_result})
 
 def begin(request):
     """Reset state and jump to the first question."""

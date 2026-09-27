@@ -13,6 +13,11 @@
         <li>File yourself, or have an attorney prepare and file everything for you</li>
         <li>Free to take, no account or payment needed — answer a few plain-language questions and see your result</li>
       </ul>
+      {% if has_result %}
+        <div class="step-note" style="margin-bottom:18px">
+          You've already checked your eligibility — <a href="{% url 'checkout:packages' %}">pick up where you left off</a>, or start over below.
+        </div>
+      {% endif %}
       <a href="{% url 'quiz:begin' %}" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Start the eligibility check</a>
       {% if user.is_authenticated %}
         <p class="auth-alt">Don't need to retake the quiz? <a href="{% url 'accounts:home' %}">Back to my packages</a></p>
