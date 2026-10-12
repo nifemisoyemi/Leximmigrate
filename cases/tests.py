@@ -62,19 +62,19 @@ class CasesTestBase(TestCase):
 class TierDependentJourneyTests(CasesTestBase):
     def test_diy_case_skips_the_meeting_step(self):
         case = self.make_paid_case(self.diy)
-        self.assertEqual(case.steps.count(), 7)
+        self.assertEqual(case.steps.count(), 8)
         self.assertFalse(case.steps.filter(template__requires_attorney_meeting=True).exists())
 
-    def test_review_tier_keeps_all_eight_steps(self):
+    def test_review_tier_keeps_all_nine_steps(self):
         case = self.make_paid_case(self.review)
-        self.assertEqual(case.steps.count(), 8)
+        self.assertEqual(case.steps.count(), 9)
         self.assertTrue(case.steps.filter(template__requires_attorney_meeting=True).exists())
 
-    def test_full_service_keeps_all_eight_steps(self):
+    def test_full_service_keeps_all_nine_steps(self):
         """Full Service shows 0 included_meetings but must NOT be treated
         like DIY — it has representation instead."""
         case = self.make_paid_case(self.full)
-        self.assertEqual(case.steps.count(), 8)
+        self.assertEqual(case.steps.count(), 9)
 
     def test_diy_first_step_available_rest_locked(self):
         case = self.make_paid_case(self.diy)
@@ -82,6 +82,12 @@ class TierDependentJourneyTests(CasesTestBase):
         self.assertEqual(steps[0].status, CaseStep.Status.AVAILABLE)
         self.assertTrue(all(s.status == CaseStep.Status.LOCKED for s in steps[1:]))
 
+    def test_application_step_exists_and_precedes_documents(self):
+        case = self.make_paid_case(self.review)
+        steps = list(case.steps.select_related("template").order_by("template__order"))
+        app_idx = next(i for i, s in enumerate(steps) if s.template.is_application_step)
+        gate_idx = next(i for i, s in enumerate(steps) if s.template.is_document_gate)
+        self.assertLess(app_idx, gate_idx)
 
 class SelfCertifyTests(CasesTestBase):
     def test_diy_self_certify_completes_gate_and_unlocks_next(self):
@@ -252,13 +258,13 @@ class QuizInferenceTests(CasesTestBase):
 
 
 class DocumentCategorySeedTests(CasesTestBase):
-    def test_seed_creates_eighteen_categories_one_required(self):
+    def test_seed_creates_twentyone_categories_two_required(self):
         cats = DocumentCategory.objects.filter(application_type__code="N-400")
-        self.assertEqual(cats.count(), 18)
-        self.assertEqual(cats.filter(is_required=True).count(), 1)
+        self.assertEqual(cats.count(), 21)
+        self.assertEqual(cats.filter(is_required=True).count(), 2)
 
     def test_seed_is_idempotent(self):
         call_command("seed_document_categories")
         self.assertEqual(
-            DocumentCategory.objects.filter(application_type__code="N-400").count(), 18
+            DocumentCategory.objects.filter(application_type__code="N-400").count(), 21
         )

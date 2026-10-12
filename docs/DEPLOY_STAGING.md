@@ -97,7 +97,7 @@ Group=www-data
 WorkingDirectory=/home/deploy/Leximmigrate
 EnvironmentFile=/home/deploy/Leximmigrate/.env
 ExecStart=/home/deploy/Leximmigrate/.venv/bin/gunicorn config.wsgi:application \
-  --workers 3 --bind unix:/run/leximmigrate.sock --timeout 60
+  --workers 3 --bind unix:/run/leximmigrate/gunicorn.sock --timeout 60
 Restart=always
 RuntimeDirectory=leximmigrate
 
@@ -154,12 +154,12 @@ server {
     location /stripe/webhook/ {
         auth_basic off;
         include proxy_params;
-        proxy_pass http://unix:/run/leximmigrate.sock;
+        proxy_pass http://unix:/run/leximmigrate/gunicorn.sock;
     }
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/run/leximmigrate.sock;
+        proxy_pass http://unix:/run/leximmigrate/gunicorn.sock;
     }
 }
 ------------------------------------------------------------------

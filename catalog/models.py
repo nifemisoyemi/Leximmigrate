@@ -113,6 +113,9 @@ class WorkflowStepTemplate(models.Model):
     # Step only exists for tiers that include attorney interaction
     # (skipped at case creation for pure-DIY tiers).
     requires_attorney_meeting = models.BooleanField(default=False)
+    # The "fill out your application" step: renders the application page 
+    # (form downloads + draft uploads) instead of the generic step page. 
+    is_application_step = models.BooleanField(default=False)
 
     body = models.TextField(
         blank=True,
@@ -138,6 +141,10 @@ class DocumentCategory(models.Model):
     description = models.TextField(blank=True)
     is_required = models.BooleanField(default=True)
     allows_multiple = models.BooleanField(default=True)
+    # Form categories live on the Application step, not the Documents page. 
+    is_form = models.BooleanField(default=False) 
+    form_url = models.URLField(blank=True) # official download link
+    form_code = models.CharField(max_length=20, blank=True) # "N-400"
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

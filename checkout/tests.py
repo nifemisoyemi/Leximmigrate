@@ -231,7 +231,7 @@ class WebhookTests(CheckoutTestBase):
         case = Case.objects.get()
         self.assertEqual(case.client, user)
         self.assertEqual(case.package, self.enhanced)
-        self.assertEqual(case.steps.count(), 8)
+        self.assertEqual(case.steps.count(), 9)
         self.assertEqual(case.steps.filter(status="available").count(), 1)
         self.assertEqual(case.steps.first().template.order, 1)
         self.assertEqual(case.current_step.order, 1)

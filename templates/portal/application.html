@@ -1,0 +1,71 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}Your application — LexImmigrate{% endblock %}
+
+{% block portal %}
+  <a href="{% url 'portal:dashboard' %}" class="portal-back">← Back to your case</a>
+  <span class="eyebrow">Step {{ step_template.order }}</span>
+  <h1 class="app-h1">{{ step_template.title }}</h1>
+
+  {% if messages %}{% for message in messages %}
+    <div class="checkout-banner">{{ message }}</div>
+  {% endfor %}{% endif %}
+
+  <div class="step-card">
+    <div class="step-body">{{ rendered_body|linebreaks }}</div>
+  </div>
+
+  {% if step_template.resource_cards.all %}
+    <h2 class="portal-h2" style="margin-top:30px">Official forms</h2>
+    <div class="resource-cards">
+      {% for card in step_template.resource_cards.all %}
+        <a class="resource-card" href="{{ card.url }}" target="_blank" rel="noopener">
+          {{ card.label }} <span class="rc-arrow">↗</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h2 class="portal-h2" style="margin-top:34px">{% if represented %}Your draft (optional){% else %}Upload your completed draft{% endif %}</h2>
+  {% for entry in required %}
+    {% include "portal/_doc_category.html" %}
+  {% endfor %}
+
+  {% if optional %}
+    <h2 class="portal-h2" style="margin-top:34px">Additional forms — do any apply to you?</h2>
+    {% if can_edit %}
+    <form method="post" class="doc-toggles">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="toggles">
+      {% for entry in optional %}
+        <label class="doc-toggle">
+          <input type="checkbox" name="applies" value="{{ entry.category.id }}" {% if entry.applies %}checked{% endif %}>
+          <span><strong>{{ entry.category.name }}</strong><br><small>{{ entry.category.description }}</small></span>
+        </label>
+      {% endfor %}
+      <button type="submit" class="btn btn-ghost btn-sm" style="margin-top:10px">Save</button>
+    </form>
+    {% endif %}
+    {% for entry in optional %}{% if entry.applies %}
+      {% include "portal/_doc_category.html" %}
+    {% endif %}{% endfor %}
+  {% endif %}
+
+  {% if can_edit and not is_complete and case_step %}
+  <div class="doc-submit">
+    {% if ready %}
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="complete">
+        <button type="submit" class="btn btn-primary btn-lg">
+          {% if represented %}I've reviewed this step{% else %}My application draft is ready{% endif %}
+        </button>
+      </form>
+      <p class="doc-submit-note">Next: gather your documents. {% if not represented %}Your draft and documents are reviewed together before you file.{% endif %}</p>
+    {% else %}
+      <p class="doc-submit-note">Upload your completed application draft above to continue.</p>
+    {% endif %}
+  </div>
+  {% elif is_complete %}
+    <div class="step-note" style="margin-top:26px">This step is complete. You can still update your draft while your documents are being gathered.</div>
+  {% endif %}
+{% endblock %}

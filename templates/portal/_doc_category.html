@@ -4,7 +4,12 @@
     {% if entry.docs %}<span class="doc-pill has">{{ entry.docs|length }} uploaded</span>
     {% else %}<span class="doc-pill">Nothing yet</span>{% endif %}
   </div>
-  <p class="doc-cat-desc">{{ entry.category.description }}</p>
+  <p class="doc-cat-desc">{{ entry.category.description }}</p> 
+  {% if entry.category.form_url %} 
+    <a class="resource-card" href="{{ entry.category.form_url }}" target="_blank" rel="noopener" style="margin-bottom:12px"> Download {{ entry.category.form_code }} from USCIS 
+      <span class="rc-arrow">↗</span> 
+    </a> 
+  {% endif %}
 
   {% for doc in entry.docs %}
     <div class="doc-row s-{{ doc.status }}">

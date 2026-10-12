@@ -17,7 +17,7 @@ from django.urls import reverse
 from cases import services
 from cases.models import Case, CaseStep, Document, Lead
 from cases.monday import REASON_PACKAGE_QUESTION, push_lead
-from catalog.models import DocumentCategory, Question
+from catalog.models import DocumentCategory, Question, WorkflowStepTemplate
 
 SECTIONS = {
     
@@ -86,6 +86,8 @@ def step_detail(request, step_id):
         return redirect("portal:dashboard")
     if step.template.is_document_gate:
         return redirect("portal:documents")
+    if step.template.is_application_step:
+        return redirect("portal:application")
  
     def _next_open_step():
         nxt = (case.steps.select_related("template")
@@ -204,7 +206,7 @@ def documents(request):
     frozen = case.status == Case.Status.PENDING_REVIEW
 
     all_categories = list(
-        DocumentCategory.objects.filter(application_type=case.application_type)
+        DocumentCategory.objects.filter(application_type=case.application_type, is_form=False)
         .order_by("order")
     )
 
@@ -324,11 +326,123 @@ def _validate_upload(category, upload, toggled_ids):
 
 
 def _checklist_ready(case, all_categories, toggled_ids):
+    every = list(DocumentCategory.objects.filter(application_type=case.application_type))
     doc_cat_ids = set(case.documents.values_list("category_id", flat=True))
-    for c in all_categories:
+    waive_forms = case.package.tier.includes_representation
+    any_applicable = False
+    for c in every:
+        if c.is_form and waive_forms:
+            continue
+        applicable = c.is_required or c.id in toggled_ids
+        if not applicable:
+            continue
+        any_applicable = True
+        if c.id not in doc_cat_ids:
+            return False
+    return any_applicable
+
+@login_required
+def application(request):
+    case = _client_case(request)
+    if not case:
+        return redirect("accounts:home")
+ 
+    step_template = WorkflowStepTemplate.objects.filter(
+        application_type=case.application_type, is_application_step=True
+    ).first()
+    case_step = case.steps.filter(template=step_template).first() if step_template else None
+    if case_step and case_step.status == CaseStep.Status.LOCKED:
+        return redirect("portal:dashboard")
+ 
+    can_edit = case.status == Case.Status.GATHERING
+    forms = list(
+        DocumentCategory.objects.filter(application_type=case.application_type, is_form=True)
+        .order_by("order")
+    )
+    toggled_ids = set(case.applicable_categories.values_list("id", flat=True))
+ 
+    if request.method == "POST":
+        action = request.POST.get("action")
+ 
+        if action == "toggles" and can_edit:
+            chosen = set(int(x) for x in request.POST.getlist("applies") if x.isdigit())
+            keep = set(case.applicable_categories.exclude(is_form=True).values_list("id", flat=True))
+            form_ids = {f.id for f in forms if not f.is_required}
+            case.applicable_categories.set(
+                DocumentCategory.objects.filter(id__in=keep | (chosen & form_ids))
+            )
+            messages.success(request, "Updated which forms apply to you.")
+            return redirect("portal:application")
+ 
+        if action == "upload" and can_edit:
+            category = next((c for c in forms if str(c.id) == request.POST.get("category_id")), None)
+            upload = request.FILES.get("file")
+            error = _validate_upload(category, upload, toggled_ids)
+            if error:
+                messages.error(request, error)
+            else:
+                Document.objects.create(
+                    case=case, category=category, file=upload,
+                    original_filename=upload.name,
+                    content_type=upload.content_type or "", size_bytes=upload.size,
+                )
+                messages.success(request, f"Uploaded to “{category.name}”.")
+            return redirect(f"{reverse('portal:application')}#cat-{request.POST.get('category_id', '')}")
+ 
+        if action == "delete" and can_edit:
+            case.documents.filter(
+                id=request.POST.get("document_id"),
+                status__in=[Document.Status.UPLOADED, Document.Status.NEEDS_REVISION],
+            ).delete()
+            return redirect("portal:application")
+ 
+        if action == "complete" and case_step and case_step.status in (
+            CaseStep.Status.AVAILABLE, CaseStep.Status.IN_PROGRESS
+        ):
+            if _forms_ready(case, forms, toggled_ids):
+                _complete_step(case, case_step)
+                messages.success(request, "Application step complete — next up, your documents.")
+                return redirect("portal:dashboard")
+            messages.error(request, "Upload your completed application draft first.")
+            return redirect("portal:application")
+ 
+        return redirect("portal:application")
+ 
+    docs_by_category = {}
+    for doc in case.documents.filter(category__is_form=True).select_related("category").order_by("uploaded_at"):
+        docs_by_category.setdefault(doc.category_id, []).append(doc)
+ 
+    required, optional = [], []
+    for c in forms:
+        entry = {"category": c, "docs": docs_by_category.get(c.id, []),
+                 "applies": c.is_required or c.id in toggled_ids}
+        (required if c.is_required else optional).append(entry)
+ 
+    body_source = (step_template.body if step_template else "").replace(
+        "{{ meetings_note }}", case.package.tier.meetings_note or ""
+    )
+    rendered_body = Template(body_source).render(Context({"case": case}))
+ 
+    return render(request, "portal/application.html", {
+        "case": case, "active": "application",
+        "step_template": step_template, "case_step": case_step,
+        "rendered_body": rendered_body,
+        "required": required, "optional": optional,
+        "can_edit": can_edit,
+        "represented": case.package.tier.includes_representation,
+        "ready": _forms_ready(case, forms, toggled_ids),
+        "is_complete": bool(case_step and case_step.status == CaseStep.Status.COMPLETE),
+    })
+ 
+ 
+def _forms_ready(case, forms, toggled_ids):
+    if case.package.tier.includes_representation:
+        return True
+    doc_cat_ids = set(case.documents.values_list("category_id", flat=True))
+    for c in forms:
         if (c.is_required or c.id in toggled_ids) and c.id not in doc_cat_ids:
             return False
-    return any(c.is_required or c.id in toggled_ids for c in all_categories)
+    return True
 
 @login_required
 def appointments(request):

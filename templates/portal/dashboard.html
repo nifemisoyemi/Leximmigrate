@@ -49,7 +49,7 @@
           <a href="{% url 'portal:step' step.id %}" class="btn btn-ghost btn-sm" style="margin-top:8px">Review this step</a>
         {% else %}
           <a href="{% url 'portal:step' step.id %}" class="btn btn-primary btn-sm" style="margin-top:8px">
-            {% if step.template.is_document_gate %}Go to documents{% else %}Open this step{% endif %}
+            {% if step.template.is_document_gate %}Go to documents{% elif step.template.is_application_step %}Go to your application{% else %}Open this step{% endif %}
           </a>
         {% endif %}
       </div>
